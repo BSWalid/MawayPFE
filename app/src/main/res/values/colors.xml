@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="transparent">#14ffffff</color>
 
-    <color name="blueBtn">#70e9ff</color>
+    <color name="bluBtn">#70e9ff</color>
+    <color name="begeBtn">#bdf2e3a7</color>
     <color name="blueShadow">#A8F9FF</color>
 </resources>
