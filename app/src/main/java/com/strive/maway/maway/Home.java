@@ -22,16 +22,14 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        /*amine's code
-        MainFragment mainFragment = new MainFragment();
+        //Fragment
+        Map mainFragment = new Map();
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
 
+        ft.replace(R.id.content,mainFragment, "main").commit();
 
 
-        ft.replace(R.id.content,mainFragment, "main")
-                .commit();
-        */
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
