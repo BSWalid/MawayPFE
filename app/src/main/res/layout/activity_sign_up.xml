@@ -5,6 +5,7 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
     android:weightSum="5"
+    android:background="@color/White"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
@@ -17,6 +18,7 @@ android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/signup"
+
             android:scaleType="centerCrop"/>
 
         <LinearLayout
@@ -321,6 +323,7 @@ android:orientation="vertical"
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/btnsignup"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2.5"
