@@ -17,7 +17,7 @@ android:orientation="vertical"
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/signup"
+            android:src="#efc"
 
             android:scaleType="centerCrop"/>
 
@@ -134,6 +134,7 @@ android:orientation="vertical"
                     android:layout_weight="2.4">
 
                     <EditText
+                        android:id="@+id/username"
                         style="@style/Widget.AppCompat.EditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -203,6 +204,7 @@ android:orientation="vertical"
                     android:layout_weight="2.4">
 
                     <EditText
+                        android:id="@+id/password"
                         style="@style/Widget.AppCompat.EditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -268,6 +270,7 @@ android:orientation="vertical"
                     android:layout_weight="2.4">
 
                     <EditText
+                        android:id="@+id/email"
                         style="@style/Widget.AppCompat.EditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
