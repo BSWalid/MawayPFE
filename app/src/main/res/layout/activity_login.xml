@@ -105,10 +105,12 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
 
                             android:fontFamily="@font/raleway_bold"
                             android:gravity="center"
-                            android:hint="Username"
+                            android:hint="Email"
+                            android:inputType="textEmailAddress"
                             android:singleLine="false"
                             android:textColorHint="@android:color/background_light"
                             android:textSize="20sp"
+                            android:id="@+id/emailEditText"
                             android:textStyle="bold"
                             android:typeface="normal" />
 
@@ -145,11 +147,13 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
                             android:fontFamily="@font/raleway_bold"
                             android:gravity="center"
                             android:hint="Password"
+                            android:inputType="textPassword"
                             android:singleLine="false"
                             android:textColorHint="@android:color/background_light"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:typeface="normal" />
+                            android:typeface="normal"
+                            android:id="@+id/passwordEditText"/>
 
                         <LinearLayout
                             android:layout_width="0dp"

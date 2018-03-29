@@ -13,14 +13,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    TextView  name ;
+    FirebaseAuth mAuth;
+    Firebase mRef;
+    String username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Firebase.setAndroidContext(this);
+        mRef = new Firebase("https://maway-1520842395181.firebaseio.com/");
+
+        name = findViewById(R.id.name);
+        SetUsername();
+
 
         //Fragment
         Map mainFragment = new Map();
@@ -103,5 +123,48 @@ public class Home extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void SetUsername(){
+        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Firebase mRef2= mRef.child("Users").child(mUid);
+
+        mRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                name = findViewById(R.id.name);
+
+                for(DataSnapshot innerData : dataSnapshot.getChildren())
+                {
+
+                    String key = innerData.getKey();
+
+                    switch (key)
+                    {
+                        case "username":
+                            //code here
+                            username = innerData.getValue(String.class);
+                            name.setText("Welcome "+username);
+                            break;
+                        case "photo":
+                            //code here
+
+                            break;
+                    }
+
+
+                }
+                //name.setText("Welcome "+username);
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
     }
 }
