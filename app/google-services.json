@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "666424516980",
+    "firebase_url": "https://maway-1520842395181.firebaseio.com",
+    "project_id": "maway-1520842395181",
+    "storage_bucket": "maway-1520842395181.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666424516980:android:a11a9690dec5d738",
+        "android_client_info": {
+          "package_name": "com.strive.maway.maway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666424516980-00uuqttgq357iokbdduq7nkkpc28c063.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.strive.maway.maway",
+            "certificate_hash": "b535c442859317c5bbd28995b11da147249f194b"
+          }
+        },
+        {
+          "client_id": "666424516980-uhp5qmsivpbngn7764qb0m6qasjt40u6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNgJPfIrrpvAo_L7w2WTe641nt0ezeyQI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666424516980-uhp5qmsivpbngn7764qb0m6qasjt40u6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
