@@ -57,11 +57,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 String passwordText = password.getText().toString();
                 String usernameText = username.getText().toString();
                  Firebase key = mRef.push();
-
                  key.child("email").setValue(emailText);
                  key.child("password").setValue(passwordText);
                  key.child("username").setValue(usernameText);
-
             }
         }); */
 
@@ -152,14 +150,13 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    String id = mAuth.getCurrentUser().getUid();
+                     String id = mAuth.getCurrentUser().getUid();
                      Firebase key = mRef.child(id);
                      key.child("username").setValue(username);
 
                     Intent intent = new Intent(SignUp.this,Home.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
                     startActivity(intent);
+                    finish();
                 }
                 else
                 {

@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         //setting on click listeners
 
-        findViewById(R.id.btnsignup).setOnClickListener(this);
+        findViewById(R.id.sigupbtn).setOnClickListener(this);
         findViewById(R.id.login).setOnClickListener(this);
 
 
@@ -103,8 +103,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                  Intent intent = new Intent(Login.this,Home.class);
-                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                  startActivity(intent);
+                 finish();
                 }
                 else
                 {
@@ -117,7 +117,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnsignup:
+            case R.id.sigupbtn:
                 startActivity(new Intent(this, SignUp.class));
                 break;
             case R.id.login :
