@@ -105,7 +105,8 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
 
                             android:fontFamily="@font/raleway_bold"
                             android:gravity="center"
-                            android:hint="Username"
+                            android:hint="Email"
+                            android:inputType="textEmailAddress"
                             android:singleLine="false"
                             android:textColorHint="@android:color/background_light"
                             android:textSize="20sp"
@@ -145,6 +146,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
                             android:fontFamily="@font/raleway_bold"
                             android:gravity="center"
                             android:hint="Password"
+                            android:inputType="textPassword"
                             android:singleLine="false"
                             android:textColorHint="@android:color/background_light"
                             android:textSize="20sp"
