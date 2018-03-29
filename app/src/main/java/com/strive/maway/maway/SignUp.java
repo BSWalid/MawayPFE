@@ -57,11 +57,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 String passwordText = password.getText().toString();
                 String usernameText = username.getText().toString();
                  Firebase key = mRef.push();
-
                  key.child("email").setValue(emailText);
                  key.child("password").setValue(passwordText);
                  key.child("username").setValue(usernameText);
-
             }
         }); */
 
