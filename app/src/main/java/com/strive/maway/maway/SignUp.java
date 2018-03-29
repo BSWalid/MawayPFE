@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -73,9 +74,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     }
  private void registerUser(){
 
-        String usernameText = username.getText().toString().trim();
-        String emailText = email.getText().toString().trim();
-        String passwordText = password.getText().toString().trim();
+        final String usernameText = username.getText().toString().trim();
+        final String emailText = email.getText().toString().trim();
+        final String passwordText = password.getText().toString().trim();
 
         //check if email is not empty
 
@@ -117,6 +118,18 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
              if(task.isSuccessful()){
                  Toast.makeText(getApplicationContext(),"You have been successfully registered",Toast.LENGTH_SHORT).show();
+
+                 login(emailText,passwordText,usernameText);
+
+
+             }
+             else{
+                 if(task.getException() instanceof FirebaseAuthUserCollisionException) {
+                     Toast.makeText(getApplicationContext(),"Email already used",Toast.LENGTH_SHORT).show();
+                 }
+                 else {
+                     Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();                }
+
              }
          }
      });
@@ -130,6 +143,32 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                   registerUser();
                 break;
         }
+
+    }
+
+    public void login(String email, String password , final String username){
+
+     mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    String id = mAuth.getCurrentUser().getUid();
+                     Firebase key = mRef.child(id);
+                     key.child("username").setValue(username);
+
+                    Intent intent = new Intent(SignUp.this,Home.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
 
     }
 
