@@ -20,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".MawayPFE2">
-        <activity android:name=".Login" >
+        <activity android:name=".Login"
+
+            android:screenOrientation="portrait" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +31,8 @@
 
 
         </activity>
-        <activity android:name=".SignUp">
+        <activity android:name=".SignUp"
+            android:screenOrientation="portrait" >
 
 
         </activity>
@@ -41,7 +44,8 @@
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" >
 
 
         </activity>
@@ -59,7 +63,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait" ></activity>
     </application>
 
 </manifest>
