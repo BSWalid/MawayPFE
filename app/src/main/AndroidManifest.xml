@@ -20,8 +20,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".MawayPFE2">
-        <activity android:name=".Login"
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <activity android:name=".Login"
             android:screenOrientation="portrait" >
 
             <intent-filter>

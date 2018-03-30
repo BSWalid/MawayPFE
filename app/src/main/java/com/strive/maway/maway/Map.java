@@ -1,7 +1,10 @@
 package com.strive.maway.maway;
 
 
+import android.*;
+import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -9,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +30,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.jar.*;
 
 
 /**
@@ -38,24 +46,78 @@ public class Map extends Fragment implements OnMapReadyCallback {
     GoogleMap mGoogleMap;
     MapView mMapView;
     View mView;
+    LinearLayout hospital;
+    LinearLayout doctor;
 
     private static final float DEFAULT_ZOOM = 15f;
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    LinearLayout Hospital;
+    private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
+    private static String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private Boolean mLocationPermissionGranted = false;
 
 
-    public Map() {
+
+   public Map() {
         // Required empty public constructor
     }
+   /* private void initMap(){
 
+        Log.d(TAG, "initMap: initializing map");
+        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(Map.this);
+    }
+    private void getLocationPermission(){
+
+        Log.d(TAG, "getLocationPermission: getting Location permissions");
+        String[] permissions ={Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
+        if(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionGranted = true;
+                initMap();
+            }
+            else{
+                ActivityCompat.requestPermissions(this.getActivity(),permissions,LOCATION_PERMISSION_REQUEST_CODE);
+            }
+
+        }
+        else{
+            ActivityCompat.requestPermissions(this.getActivity(),permissions,LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: called");
+        mLocationPermissionGranted = false;
+        switch(requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            mLocationPermissionGranted = false;
+                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                            return;
+                        }
+
+                    }
+                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                    mLocationPermissionGranted = true;
+                    //initialize our map
+                  //  initMap();
+                }
+
+            }
+        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         isServicesOK();
         mMapView = (MapView) mView.findViewById(R.id.map);
+        //getLocationPermission();
         if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();
@@ -64,25 +126,34 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
         }
 
-        Hospital.setOnClickListener(new View.OnClickListener() {
+
+
+        hospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), " hospital Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        doctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Doctor clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
-
-
-        Hospital = mView.findViewById(R.id.hospitalclick);
-
+        hospital = mView.findViewById(R.id.hospitalclick);
+        doctor = mView.findViewById(R.id.doctorclick);
         return mView;
     }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

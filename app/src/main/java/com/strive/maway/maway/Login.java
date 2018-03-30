@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     Button loginbtn;
     TextView sigupbtn;
     EditText email;
+    ProgressBar progressBar;
     EditText password;
     FirebaseAuth mAuth;
 
@@ -44,6 +46,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         mAuth = FirebaseAuth.getInstance();
         password = (EditText) findViewById(R.id.passwordEditText);
         email = (EditText) findViewById(R.id.emailEditText);
+        progressBar = (ProgressBar) findViewById(R.id.signInProgressBar);
 
         //setting on click listeners
 
@@ -98,9 +101,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             password.requestFocus(); //request the focus to the password
             return; //it stops the execution
         }
+           //set progressbar visible
+        progressBar.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(emailText,passwordText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+
+                progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
                  Intent intent = new Intent(Login.this,Home.class);
                  startActivity(intent);
