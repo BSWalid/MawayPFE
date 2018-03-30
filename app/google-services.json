@@ -10,7 +10,7 @@
   "client": [
     {
       "client_info": {
-willywanka
+
         "mobilesdk_app_id": "1:666424516980:android:a11a9690dec5d738",
 
         "android_client_info": {
@@ -35,7 +35,7 @@ willywanka
       ],
       "api_key": [
         {
-willywanka
+
           "current_key": "AIzaSyBNgJPfIrrpvAo_L7w2WTe641nt0ezeyQI"
 
         }
@@ -48,7 +48,7 @@ willywanka
           "status": 2,
           "other_platform_oauth_client": [
             {
-willywanka
+
               "client_id": "666424516980-uhp5qmsivpbngn7764qb0m6qasjt40u6.apps.googleusercontent.com",
 
               "client_type": 3
