@@ -24,14 +24,34 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
         app:menu="@menu/activity_home_drawer" >
-       <android.support.design.widget.NavigationView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:background="@color/White">
+            <TextView
+
+                android:background="@color/White"
+                android:id="@+id/logout"
+                android:text="Logout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:drawableLeft="@drawable/logout"
+                android:textColor="#000" />
+        </LinearLayout>
+
+
+       <!-- <android.support.design.widget.NavigationView
            android:background="@color/White"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:layout_gravity="bottom"
            app:menu="@menu/menu2">
 
-       </android.support.design.widget.NavigationView>
+       </android.support.design.widget.NavigationView>-->
 
     </android.support.design.widget.NavigationView>
 
