@@ -12,6 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -30,6 +31,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     EditText username;
     EditText password;
     EditText email;
+    ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private Firebase mRef;
     @Override
@@ -44,7 +46,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         username =(EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
-
+        progressBar = (ProgressBar) findViewById(R.id.signInProgressBar);
         //instantiate auth
         mAuth = FirebaseAuth.getInstance();
         findViewById(R.id.btnsignup).setOnClickListener(this);
@@ -106,13 +108,16 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
          password.requestFocus(); //request the focus to the password
          return; //it stops the execution
      }
-
+     //set progressbar visible
+      progressBar.setVisibility(View.VISIBLE);
      //the complete Listener detects the completion, it will take a complete listener interface object
      mAuth.createUserWithEmailAndPassword(emailText,passwordText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
          @Override
          //when the registration is completed the method onComplete() is called
          //here we can check if it was successful or not, using the task object
          public void onComplete(@NonNull Task<AuthResult> task) {
+             //set progressbar invisible
+             progressBar.setVisibility(View.GONE);
 
              if(task.isSuccessful()){
                  Toast.makeText(getApplicationContext(),"You have been successfully registered",Toast.LENGTH_SHORT).show();
