@@ -63,7 +63,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
    public Map() {
         // Required empty public constructor
     }
-   /* private void initMap(){
+   private void initMap(){
 
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
@@ -86,7 +86,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
         else{
             ActivityCompat.requestPermissions(this.getActivity(),permissions,LOCATION_PERMISSION_REQUEST_CODE);
         }
-    }*/
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult: called");
@@ -105,7 +105,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
                     Log.d(TAG, "onRequestPermissionsResult: permission granted");
                     mLocationPermissionGranted = true;
                     //initialize our map
-                  //  initMap();
+                    initMap();
                 }
 
             }
