@@ -63,12 +63,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
    public Map() {
         // Required empty public constructor
     }
-   private void initMap(){
 
-        Log.d(TAG, "initMap: initializing map");
-        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(Map.this);
-    }
     private void getLocationPermission(){
 
         Log.d(TAG, "getLocationPermission: getting Location permissions");
@@ -76,7 +71,8 @@ public class Map extends Fragment implements OnMapReadyCallback {
         if(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
             if(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionGranted = true;
-                initMap();
+                getDeviceLocation();
+
             }
             else{
                 ActivityCompat.requestPermissions(this.getActivity(),permissions,LOCATION_PERMISSION_REQUEST_CODE);
@@ -104,8 +100,10 @@ public class Map extends Fragment implements OnMapReadyCallback {
                     }
                     Log.d(TAG, "onRequestPermissionsResult: permission granted");
                     mLocationPermissionGranted = true;
+                    getDeviceLocation();
+
                     //initialize our map
-                    initMap();
+
                 }
 
             }
@@ -117,7 +115,8 @@ public class Map extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState);
         isServicesOK();
         mMapView = (MapView) mView.findViewById(R.id.map);
-        //getLocationPermission();
+        getLocationPermission();
+
         if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();
@@ -215,7 +214,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
         try{
 
-
+            if( mLocationPermissionGranted){
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -232,14 +231,12 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
                                 }
 
-
-
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                }); }
 
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
