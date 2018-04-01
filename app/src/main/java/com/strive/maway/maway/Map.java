@@ -4,16 +4,17 @@ package com.strive.maway.maway;
 import android.*;
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,31 +24,38 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.jar.*;
 
 
-/**
- * A simple {@link Fragment} subclass.
+/* A simple {@link Fragment} subclass.
  */
-public class Map extends Fragment implements OnMapReadyCallback {
+public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
     GoogleMap mGoogleMap;
     MapView mMapView;
+    private GoogleApiClient client;
     View mView;
     LinearLayout hospital;
     LinearLayout doctor;
+
+    private LocationRequest mLocationRequest;
+    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000;  //2 seconds
+
 
     private static final float DEFAULT_ZOOM = 15f;
     private static final String TAG = "MainActivity";
@@ -57,12 +65,15 @@ public class Map extends Fragment implements OnMapReadyCallback {
     private static String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionGranted = false;
+    LocationCallback locationCallback;
 
 
 
-   public Map() {
+
+    public Map() {
         // Required empty public constructor
     }
+
 
     private void getLocationPermission(){
 
@@ -71,6 +82,9 @@ public class Map extends Fragment implements OnMapReadyCallback {
         if(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
             if(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionGranted = true;
+                if(client==null){
+                    buildGoogleApiClient();
+                }
                 getDeviceLocation();
 
             }
@@ -100,6 +114,9 @@ public class Map extends Fragment implements OnMapReadyCallback {
                     }
                     Log.d(TAG, "onRequestPermissionsResult: permission granted");
                     mLocationPermissionGranted = true;
+                    if(client==null){
+                        buildGoogleApiClient();
+                    }
                     getDeviceLocation();
 
                     //initialize our map
@@ -109,6 +126,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -156,12 +174,15 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
+
         // hna ndirou centralisation nta3 Current location of the phone
+        buildGoogleApiClient();
         getDeviceLocation();
 
 
@@ -171,6 +192,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
             return;
         }
+
         mGoogleMap.setMyLocationEnabled(true);
 
     }
@@ -199,7 +221,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
         }
         return false;
     }
-// change   Camera position Method
+    // change   Camera position Method
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG , "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -226,10 +248,10 @@ public class Map extends Fragment implements OnMapReadyCallback {
                             {moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM);
                             }else
-                                {
-                                    Toast.makeText(getContext(), "Enable your Gps", Toast.LENGTH_SHORT).show();
+                            {
+                                Toast.makeText(getContext(), "Enable your Gps", Toast.LENGTH_SHORT).show();
 
-                                }
+                            }
 
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
@@ -242,10 +264,101 @@ public class Map extends Fragment implements OnMapReadyCallback {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
     }
+    // Trigger new location updates at interval
+
+    protected void startLocationUpdates() {
+
+        // Create the location request to start receiving updates
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check whether location settings are satisfied
+        SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if((ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+            &&(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED))
+        {
+            LocationServices.getFusedLocationProviderClient(getContext()).requestLocationUpdates(mLocationRequest,createLocationCallBack() ,
+                    Looper.myLooper());
+        }
+    }
+    private LocationCallback createLocationCallBack(){
+
+      locationCallback=  new LocationCallback() {
+          @Override
+          public void onLocationResult(LocationResult locationResult) {
+              // do work here
+              onLocationChanged(locationResult.getLastLocation());
+          }
+      };
+      return locationCallback;
+    }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+        // New location has now been determined
+        // New location has now been determined
+        String msg = "Updated Location: " +
+                Double.toString(location.getLatitude()) + "," +
+                Double.toString(location.getLongitude());
+
+        Log.d(TAG, "onLocationChanged:"+msg);
+        // You can now create a LatLng Object for use with maps
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (client != null && mFusedLocationProviderClient!= null) {
+            startLocationUpdates();
+        } else {
+            buildGoogleApiClient();
+        }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        client = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+       client.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Toast.makeText(getActivity(), "Connection suspended", Toast.LENGTH_SHORT).show();
+    }
 
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(getActivity(), "Connection failed", Toast.LENGTH_SHORT).show();
 
-
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mFusedLocationProviderClient != null) {
+            mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        }
+    }
 }
