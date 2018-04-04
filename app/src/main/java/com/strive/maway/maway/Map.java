@@ -53,8 +53,8 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     LinearLayout doctor;
 
     private LocationRequest mLocationRequest;
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000;  //2 seconds
+    private long UPDATE_INTERVAL = 60* 1000 *5;  /*  5 d9aye9  */
+    private long FASTEST_INTERVAL = 60* 1000 *5;  //2 seconds
 
 
     private static final float DEFAULT_ZOOM = 15f;
@@ -66,6 +66,8 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionGranted = false;
     LocationCallback locationCallback;
+    int PROXIMITY_RADIUS = 20000;
+    double latitude,longitude;
 
 
 
@@ -148,7 +150,17 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         hospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Object dataTransfer[] = new Object[2];
+                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
                 Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
+                mGoogleMap.clear();
+                String hospital = "hospital";
+                String url = getUrl(latitude, longitude, hospital);
+                dataTransfer[0] = mGoogleMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(getContext(), "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
             }
         });
         doctor.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +169,22 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                 Toast.makeText(getContext(), "Doctor clicked", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    private String getUrl(double latitude , double longitude , String nearbyPlace)
+    {
+
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
+        googlePlaceUrl.append("&type="+nearbyPlace);
+        googlePlaceUrl.append("&sensor=true");
+        googlePlaceUrl.append("&key="+"AIzaSyD0_7Gef4EHp5_yD4hssK_wryzUe0Zie-A");
+
+        Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
+
+        return googlePlaceUrl.toString();
     }
 
 
@@ -315,6 +343,8 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
         Log.d(TAG, "onLocationChanged:"+msg);
         // You can now create a LatLng Object for use with maps
+        latitude=location.getLatitude();
+        longitude = location.getLongitude();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
     }
