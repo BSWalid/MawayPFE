@@ -2,6 +2,8 @@ package com.strive.maway.maway;
 
 import android.util.Log;
 
+import com.firebase.client.Firebase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,9 @@ import java.util.List;
 
 public class DataParser{
 
+    Firebase mRef = new Firebase("https://maway-1520842395181.firebaseio.com/Location/Hospitals");
+
+
     private HashMap<String, String> getPlace(JSONObject googlePlaceJson)
     {
         HashMap<String, String> googlePlaceMap = new HashMap<>();
@@ -24,7 +29,6 @@ public class DataParser{
         String latitude= "";
         String longitude="";
         String reference="";
-
         Log.d("DataParser","jsonobject ="+googlePlaceJson.toString());
 
 
@@ -46,6 +50,20 @@ public class DataParser{
             googlePlaceMap.put("lat", latitude);
             googlePlaceMap.put("lng", longitude);
             googlePlaceMap.put("reference", reference);
+
+            //adding locations to Firebase
+
+           String keyLocation = (latitude+" "+longitude);
+            Firebase key = mRef.child(keyLocation);
+            key.child("place_name").setValue(placeName);
+            key.child("vicinity").setValue(vicinity);
+            key.child("latitude").setValue(latitude);
+            key.child("longitude").setValue(longitude);
+            key.child("reference").setValue(reference);
+
+
+
+            //normally we store here our data
 
 
         }
