@@ -161,6 +161,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                 dataTransfer[2]="Hospital";
 
 
+
                 getNearbyPlacesData.execute(dataTransfer);
                 Toast.makeText(getContext(), "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
             }
