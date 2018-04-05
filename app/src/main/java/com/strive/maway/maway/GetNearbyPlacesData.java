@@ -2,7 +2,12 @@ package com.strive.maway.maway;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,11 +27,17 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 private String googlePlacesData;
 private GoogleMap mMap;
         String url;
+        private Firebase mRef;
+        String TypeWish;
+        String typeOfPlace="";
+
 
 @Override
 protected String doInBackground(Object... objects){
         mMap = (GoogleMap)objects[0];
         url = (String)objects[1];
+        TypeWish=(String) objects[2];
+
 
         DownloadURL downloadURL = new DownloadURL();
         try {
@@ -48,8 +59,17 @@ protected void onPostExecute(String s){
         showNearbyPlaces(nearbyPlaceList);
         }
 
-private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList)
+        public GetNearbyPlacesData() {
+                super();
+        }
+
+        private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList)
         {
+
+                mRef= new Firebase("https://maway-1520842395181.firebaseio.com/Locations");
+
+
+
         for(int i = 0; i < nearbyPlaceList.size(); i++)
         {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -63,12 +83,97 @@ private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList)
         LatLng latLng = new LatLng( lat, lng);
         markerOptions.position(latLng);
         markerOptions.title(placeName + " : "+ vicinity);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
-        mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
+        // Firebase information about the place
+
+
+
+                //adding locations to Firebase
+
+                String keyLocation = googlePlace.get("place_id");
+                Log.d("pathKey", keyLocation);
+                final String typeofplace = googlePlace.get("type_of_place");
+                Log.d("typeofplace2", typeofplace+"faregh");
+
+
+                Firebase mRef2= mRef.child(keyLocation);
+
+                // get the type of the  place
+
+                mRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                setthelocation(dataSnapshot);
+
+                                for(DataSnapshot innerData : dataSnapshot.getChildren())
+                                {
+                                        String key = innerData.getKey();
+
+                                        switch (key)
+                                        {
+                                                case "type":
+                                                        //code here
+                                                        typeOfPlace   = innerData.getValue(String.class);
+                                                        //Log.d("hedatype", typeOfPlace);
+                                                        break;
+                                        }
+
+                                }
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                });
+
+
+
+                Firebase key = mRef.child(keyLocation);
+                key.child("place_name").setValue(placeName);
+                key.child("vicinity").setValue(vicinity);
+                key.child("latitude").setValue(lat);
+                key.child("longitude").setValue(lng);
+
+                //normally we store here our data
+
+
+                Log.d("typeofplace", TypeWish);
+                Log.d("typeofplace2", typeOfPlace+"faregh");
+
+
+
+
+
+
+                mMap.addMarker(markerOptions);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
         }
+
+        }
+        public void setthelocation(DataSnapshot s){
+                for(DataSnapshot innerData : s.getChildren())
+                {
+                        String key = innerData.getKey();
+
+                        switch (key)
+                        {
+                                case "type":
+                                        //code here
+                                        typeOfPlace   = innerData.getValue(String.class);
+                                        Log.d("hedatype", typeOfPlace);
+                                        break;
+                        }
+
+                }
+
+
+
         }
         }
 
