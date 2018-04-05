@@ -188,10 +188,7 @@ public class Home extends AppCompatActivity
                             username = innerData.getValue(String.class);
                             name.setText("Welcome "+username);
                             break;
-                        case "photo":
-                            //code here
 
-                            break;
                     }
 
 
