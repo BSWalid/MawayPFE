@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MawayPFE.iml" filepath="$PROJECT_DIR$/MawayPFE.iml" />
+      <module fileurl="file://C:\Users\willy\Desktop\projects\dev\Test\MawayPFE2\MawayPFE.iml" filepath="C:\Users\willy\Desktop\projects\dev\Test\MawayPFE2\MawayPFE.iml" />
+      <module fileurl="file://C:\Users\Winsido\AndroidStudioProjects\PFE\MawayPFE\MawayPFE2.iml" filepath="C:\Users\Winsido\AndroidStudioProjects\PFE\MawayPFE\MawayPFE2.iml" />
+      <module fileurl="file://C:\Users\Walid\Desktop\Projects\Android\MawayPFE\MawayPFE2.iml" filepath="C:\Users\Walid\Desktop\Projects\Android\MawayPFE\MawayPFE2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
