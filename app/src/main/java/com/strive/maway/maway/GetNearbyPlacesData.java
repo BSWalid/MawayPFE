@@ -31,7 +31,9 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     private Firebase mRef;
     String TypeWish;
     String typeOfPlace="";
-    ArrayList<Location> typeList=new ArrayList<>(); ;
+
+    List<HashMap<String,String>> nearbyPlaces2 ;
+
 
 
     @Override
@@ -57,33 +59,76 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         List<HashMap<String, String>> nearbyPlaceList;
         DataParser parser = new DataParser();
         nearbyPlaceList = parser.parse(s);
+        nearbyPlaces2=nearbyPlaceList;
         mRef= new Firebase("https://maway-1520842395181.firebaseio.com/Locations");
         Log.d("nearbyplacesdata","called parse method");
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        readData(new FirebaseCallBack() {
+                ArrayList<Location> typeList=new ArrayList<>();
+                for(DataSnapshot innerData : dataSnapshot.getChildren())
+                {
+                    String id = mRef.getKey();
+                    String type;
 
+                    Log.e("keys-----", innerData.getKey());
+
+
+                    for ( DataSnapshot innerInnerData : innerData.getChildren()) {
+
+                        String key = innerInnerData.getKey();
+                        Log.e("keys*****", key);
+                        switch (key)
+                        {
+
+                            case "type" :
+                                //code
+                                //typeOfPlace   = innerInnerData.getValue(String.class);
+
+                                type = innerInnerData.getValue(String.class);
+                                Location L  = new Location(innerData.getKey(),type);
+                                typeList.add(L);
+                        }
+                    }
+
+
+
+
+
+                }
+                Log.e("hambouk",typeList.toString());
+                showNearbyPlaces(nearbyPlaces2,typeList);
+
+            }
 
             @Override
-            public void onCallBack(List<Location> list) {
-
-
+            public void onCancelled(FirebaseError firebaseError) {
 
             }
         });
 
+       /* readData(new FirebaseCallBack() {
 
-        showNearbyPlaces(nearbyPlaceList);
+            @Override
+            public void onCallBack(List<Location> list) {
+
+            }
+        });*/
+
+
+        //showNearbyPlaces(nearbyPlaceList,typeList);
     }
 
     public GetNearbyPlacesData() {
         super();
     }
 
-    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList)
+    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations)
     {
 
 
-
+        Log.d("pleasehambouk", Locations.toString());
 
 
         for(int i = 0; i < nearbyPlaceList.size(); i++)
@@ -104,11 +149,11 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             // Firebase information about the place
 
-            for (int j=0;j<typeList.size();j++){
+            for (int j=0;j<Locations.size();j++){
 
-                typeList.add(typeList.get(j));
-                Log.d("pleaseEmchiListLoca", typeList.get(j).getType());
-                Log.d("pleaseEmchiListLoca", typeList.get(j).getID());
+
+                Log.d("pleaseEmchiListLoca", Locations.get(j).getType());
+                Log.d("pleaseEmchiListLoca", Locations.get(j).getID());
 
                 Log.d("position", "112");
             }
@@ -125,7 +170,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             // get the type of the  place
 
-            mRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+          /*  mRef2.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -152,7 +197,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 public void onCancelled(FirebaseError firebaseError) {
 
                 }
-            });
+            });*/
 
 
 
@@ -161,7 +206,9 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             key.child("place_name").setValue(placeName);
             key.child("vicinity").setValue(vicinity);
             key.child("latitude").setValue(lat);
-            key.child("longitude").setValue(lng);}
+            key.child("longitude").setValue(lng);
+            key.child("type").setValue("Hospital");
+            }
 
 
             //normally we store here our data
@@ -172,14 +219,21 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
 
 
+            if (TypeWish.equals(getType(Locations,keyLocation))){
+                mMap.addMarker(markerOptions);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
-            mMap.addMarker(markerOptions);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+            }
+
+
+
 
         }
 
     }
+
+    /*
     private void readData(final FirebaseCallBack firebaseCallBack){
         ValueEventListener valueEventListener= new ValueEventListener() {
             @Override
@@ -211,6 +265,19 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     public  interface FirebaseCallBack{
         void onCallBack(List<Location> list);
 
+    }*/
+
+    private  String getType(ArrayList<Location> listoftypes,String key){
+
+        for (int i = 0; i<listoftypes.size();i++){
+
+            if (key.equals(listoftypes.get(i).getID())){
+
+                return listoftypes.get(i).getType();
+            }
+        }
+
+        return "";
     }
 
 }
