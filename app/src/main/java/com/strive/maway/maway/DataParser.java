@@ -67,21 +67,6 @@ public class DataParser{
             googlePlaceMap.put("reference", reference);
             googlePlaceMap.put("place_id", ID);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -123,5 +108,38 @@ public class DataParser{
             e.printStackTrace();
         }
         return getPlaces(jsonArray);
+    }
+    public HashMap<String,String> parseDirections(String jsonData){
+        JSONArray jsonArray = null;
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(jsonData);
+            //the instruction bellow gives us the legs array
+            jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs");
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return getDuration(jsonArray);
+
+    }
+    private HashMap<String,String> getDuration(JSONArray googleDirectionsJson){
+
+        HashMap<String,String> googleDirectionsMap = new HashMap<>();
+        try {
+            String duration= googleDirectionsJson.getJSONObject(0).getJSONObject("duration").getString("text");
+            String distance=googleDirectionsJson.getJSONObject(0).getJSONObject("distance").getString("text");
+          googleDirectionsMap.put("duration",duration);
+          googleDirectionsMap.put("distance",distance);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return googleDirectionsMap;
+
+
     }
 }

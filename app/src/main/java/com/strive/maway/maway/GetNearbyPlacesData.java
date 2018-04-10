@@ -30,11 +30,10 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     String url;
     private Firebase mRef;
     String TypeWish;
-    String typeOfPlace="";
 
     List<HashMap<String,String>> nearbyPlaces2 ;
 
-
+   //in objects we obtain our map, url and type that we sent in map activity
 
     @Override
     protected String doInBackground(Object... objects){
@@ -46,7 +45,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         DownloadURL downloadURL = new DownloadURL();
         try {
             googlePlacesData = downloadURL.readUrl(url);
-        } catch (IOException e) {
+            }
+        catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -60,8 +60,11 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         DataParser parser = new DataParser();
         nearbyPlaceList = parser.parse(s);
         nearbyPlaces2=nearbyPlaceList;
+
+                 //initialisation of Firebase reference
+
         mRef= new Firebase("https://maway-1520842395181.firebaseio.com/Locations");
-        Log.d("nearbyplacesdata","called parse method");
+
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -72,32 +75,22 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                     String id = mRef.getKey();
                     String type;
 
-                    Log.e("keys-----", innerData.getKey());
-
 
                     for ( DataSnapshot innerInnerData : innerData.getChildren()) {
 
                         String key = innerInnerData.getKey();
-                        Log.e("keys*****", key);
                         switch (key)
                         {
 
                             case "type" :
-                                //code
-                                //typeOfPlace   = innerInnerData.getValue(String.class);
 
                                 type = innerInnerData.getValue(String.class);
                                 Location L  = new Location(innerData.getKey(),type);
                                 typeList.add(L);
                         }
                     }
-
-
-
-
-
                 }
-                Log.e("hambouk",typeList.toString());
+
                 showNearbyPlaces(nearbyPlaces2,typeList);
 
             }
@@ -108,16 +101,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             }
         });
 
-       /* readData(new FirebaseCallBack() {
-
-            @Override
-            public void onCallBack(List<Location> list) {
-
-            }
-        });*/
-
-
-        //showNearbyPlaces(nearbyPlaceList,typeList);
     }
 
     public GetNearbyPlacesData() {
@@ -126,10 +109,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations)
     {
-
-
-        Log.d("pleasehambouk", Locations.toString());
-
 
         for(int i = 0; i < nearbyPlaceList.size(); i++)
         {
@@ -147,77 +126,41 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
 
-            // Firebase information about the place
-
-            for (int j=0;j<Locations.size();j++){
-
-
-                Log.d("pleaseEmchiListLoca", Locations.get(j).getType());
-                Log.d("pleaseEmchiListLoca", Locations.get(j).getID());
-
-                Log.d("position", "112");
-            }
-
             //adding locations to Firebase
 
             String keyLocation = googlePlace.get("place_id");
-            Log.d("pathKey", keyLocation);
-            final String typeofplace = googlePlace.get("type_of_place");
-            Log.d("typeofplace2", typeofplace+"faregh");
-
-
-            Firebase mRef2= mRef.child(keyLocation);
-
-            // get the type of the  place
-
-          /*  mRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                    for(DataSnapshot innerData : dataSnapshot.getChildren())
-                    {
-                        String key = innerData.getKey();
-
-                        switch (key)
-                        {
-                            case "type":
-                                //code here
-                                typeOfPlace   = innerData.getValue(String.class);
-                                Log.d("hedatype", typeOfPlace);
-
-                                break;
-                        }
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });*/
-
-
 
             Firebase key = mRef.child(keyLocation);
             if (key==null){
-            key.child("place_name").setValue(placeName);
-            key.child("vicinity").setValue(vicinity);
-            key.child("latitude").setValue(lat);
-            key.child("longitude").setValue(lng);
-            key.child("type").setValue("Hospital");
+                key.child("place_name").setValue(placeName);
+                key.child("vicinity").setValue(vicinity);
+                key.child("latitude").setValue(lat);
+                key.child("longitude").setValue(lng);
+                key.child("type").setValue("Hospital");
             }
+            //before displaying locations i  need to get a list containing distance of each
+            //location from my current location
+
+            /*
+            Object dataTransfer[] = new Object[3];
+            String urlDirection = getDirectionsUrl(currentlat,currentlng,lat,lng);
+            dataTransfer[0] =mMap;
+            dataTransfer[1]= urlDirection;
+            dataTransfer[2] = new LatLng(lat,lng);
+            getDirectionsData.execute(dataTransfer); (it should return me a hashmap containing duration & distance)
+            //AND MAYBE after execute we do
+
+            HashMap<String,String> durationAndDistance = new HashMap<>();
+            durationAndDistance = getDirectionsData.getDurationAndDistance;
+             //then we store it in a list containing latlng and hashmap
+             listDurationAndDistanceOfLocations.add(new LatLng(lat,lng),durationAndDistance);
+
+             //of course here it will be a customized type, then in the end we call a methode which
+             //finds the minimum of distance and show direction of that particular place
+             */
 
 
-            //normally we store here our data
-
-
-            Log.d("typeofplace", TypeWish);
-            Log.d("typeofplace2", typeOfPlace+"faregh");
-
-
+            //display locations
 
             if (TypeWish.equals(getType(Locations,keyLocation))){
                 mMap.addMarker(markerOptions);
@@ -233,51 +176,30 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     }
 
-    /*
-    private void readData(final FirebaseCallBack firebaseCallBack){
-        ValueEventListener valueEventListener= new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds:dataSnapshot.getChildren()){
 
+    private  String getType(ArrayList<Location> listOfTypes,String key){
 
-                    String Type= ds.child("type").getValue(String.class);
-                    String ID =ds.getKey();
-                    Location L = new Location(ID,Type);
+        for (int i = 0; i<listOfTypes.size();i++){
 
-                    typeList.add(L);
+            if (key.equals(listOfTypes.get(i).getID())){
 
-
-                }
-                firebaseCallBack.onCallBack(typeList);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        };
-        mRef.addListenerForSingleValueEvent(valueEventListener);
-
-
-    }
-    //create interface First
-    public  interface FirebaseCallBack{
-        void onCallBack(List<Location> list);
-
-    }*/
-
-    private  String getType(ArrayList<Location> listoftypes,String key){
-
-        for (int i = 0; i<listoftypes.size();i++){
-
-            if (key.equals(listoftypes.get(i).getID())){
-
-                return listoftypes.get(i).getType();
+                return listOfTypes.get(i).getType();
             }
         }
 
         return "";
     }
+
+    private String getDirectionsUrl(String currentLat, String currentLng ,String latLocation,String lngLocation){
+
+        StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+        googleDirectionsUrl.append("origin="+currentLat+","+currentLng);
+        googleDirectionsUrl.append("&destination="+latLocation+","+lngLocation);
+        googleDirectionsUrl.append("&key="+"AIzaSyB68rL3FyWgpVIPpVCc0h_wIOIsUXayBRQ");
+
+        return googleDirectionsUrl.toString();
+
+    }
+
 
 }
