@@ -1,5 +1,6 @@
 package com.strive.maway.maway;
 
+
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.PatternMatcher;
@@ -42,7 +43,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         Firebase.setAndroidContext(this);
         mRef = new Firebase("https://maway-1520842395181.firebaseio.com/Users");
 
-        //btnsignup =(Button) findViewById(R.id.btnsignup);
+
         username =(EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
