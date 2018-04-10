@@ -168,38 +168,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             Firebase mRef2= mRef.child(keyLocation);
 
-            // get the type of the  place
-
-          /*  mRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                    for(DataSnapshot innerData : dataSnapshot.getChildren())
-                    {
-                        String key = innerData.getKey();
-
-                        switch (key)
-                        {
-                            case "type":
-                                //code here
-                                typeOfPlace   = innerData.getValue(String.class);
-                                Log.d("hedatype", typeOfPlace);
-
-                                break;
-                        }
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });*/
-
-
 
             Firebase key = mRef.child(keyLocation);
             if (key==null){
@@ -208,6 +176,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             key.child("latitude").setValue(lat);
             key.child("longitude").setValue(lng);
             key.child("type").setValue("Hospital");
+            key.child("source").setValue("Google");
             }
 
 
@@ -220,6 +189,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
 
             if (TypeWish.equals(getType(Locations,keyLocation))){
+
                 mMap.addMarker(markerOptions);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
@@ -229,43 +199,13 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
 
 
+
         }
 
-    }
-
-    /*
-    private void readData(final FirebaseCallBack firebaseCallBack){
-        ValueEventListener valueEventListener= new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds:dataSnapshot.getChildren()){
-
-
-                    String Type= ds.child("type").getValue(String.class);
-                    String ID =ds.getKey();
-                    Location L = new Location(ID,Type);
-
-                    typeList.add(L);
-
-
-                }
-                firebaseCallBack.onCallBack(typeList);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        };
-        mRef.addListenerForSingleValueEvent(valueEventListener);
-
 
     }
-    //create interface First
-    public  interface FirebaseCallBack{
-        void onCallBack(List<Location> list);
 
-    }*/
+
 
     private  String getType(ArrayList<Location> listoftypes,String key){
 
