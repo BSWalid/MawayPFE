@@ -57,6 +57,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     protected void onPostExecute(String s){
 
         List<HashMap<String, String>> nearbyPlaceList;
+        //nearbyPlaceList contains google Map locations
         DataParser parser = new DataParser();
         nearbyPlaceList = parser.parse(s);
         nearbyPlaces2=nearbyPlaceList;
@@ -68,12 +69,15 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                ArrayList<LocationInformations> locationInformationsList = new ArrayList<>();
                 ArrayList<Location> typeList=new ArrayList<>();
                 for(DataSnapshot innerData : dataSnapshot.getChildren())
-                {
+                {   String lat,lng, placeName,source, vicinity;
                     String id = mRef.getKey();
                     String type;
+                // initialise our LocationInformation that we will add to our list if it's stored only in firebase
+
+                    LocationInformations Linfo = new LocationInformations(innerData.getKey(),"","","","","","");
 
 
                     for ( DataSnapshot innerInnerData : innerData.getChildren()) {
@@ -81,17 +85,41 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                         String key = innerInnerData.getKey();
                         switch (key)
                         {
-
                             case "type" :
 
                                 type = innerInnerData.getValue(String.class);
                                 Location L  = new Location(innerData.getKey(),type);
                                 typeList.add(L);
+                                Linfo.setType(type);
+                        }
+                        if(key.equals("latitude")){
+                            lat = innerInnerData.getValue(String.class);
+                            Linfo.setLatitude(lat);
+                        }
+                        if(key.equals("longitude")){
+                            lng = innerInnerData.getValue(String.class);
+                            Linfo.setLongitude(lng);
+                        }
+                        if(key.equals("place_name")){
+                            placeName = innerInnerData.getValue(String.class);
+                            Linfo.setPlaceName(placeName);
+                        }
+                        if(key.equals("vicinity")){
+                            vicinity =innerInnerData.getValue(String.class);
+                            Linfo.setVicinity(vicinity);
+                        }
+                        if(key.equals("source")){
+                            source=innerInnerData.getValue(String.class);
+                            Linfo.setSource(source);
                         }
                     }
+                     // If that location is injected then add to our list
+                   if(Linfo.getSource().equals("injected")){
+                       locationInformationsList.add(Linfo);
+                   }
                 }
 
-                showNearbyPlaces(nearbyPlaces2,typeList);
+                showNearbyPlaces(nearbyPlaces2,typeList,locationInformationsList);
 
             }
 
@@ -107,7 +135,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         super();
     }
 
-    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations)
+    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations, ArrayList<LocationInformations> locationInformationsList)
     {
 
         for(int i = 0; i < nearbyPlaceList.size(); i++)
@@ -136,6 +164,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 key.child("vicinity").setValue(vicinity);
                 key.child("latitude").setValue(lat);
                 key.child("longitude").setValue(lng);
+                key.child("source").setValue("google");
                 key.child("type").setValue("Hospital");
             }
             //before displaying locations i  need to get a list containing distance of each
@@ -160,7 +189,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
              */
 
 
-            //display locations
+            //display locations from google
 
             if (TypeWish.equals(getType(Locations,keyLocation))){
                 mMap.addMarker(markerOptions);
@@ -168,11 +197,28 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
             }
-
-
-
-
         }
+
+        for(int k=0;k<locationInformationsList.size();k++){
+
+            if (TypeWish.equals(getType(Locations,locationInformationsList.get(k).getKey()))){
+                double latitude = Double.parseDouble(locationInformationsList.get(k).getLatitude());
+                double longitude = Double.parseDouble(locationInformationsList.get(k).getLongitude());
+                 LatLng latLng = new LatLng(latitude,longitude);
+                String placeName = locationInformationsList.get(k).getPlaceName();
+                String vicinity = locationInformationsList.get(k).getVicinity();
+
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title(placeName + " : "+ vicinity);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                mMap.addMarker(markerOptions);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+            }
+        }
+
+
 
     }
 
