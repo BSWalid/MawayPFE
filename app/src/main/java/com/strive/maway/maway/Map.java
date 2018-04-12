@@ -150,7 +150,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         hospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Object dataTransfer[] = new Object[3];
+                Object dataTransfer[] = new Object[5];
                 GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
                 Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
                 mGoogleMap.clear();
@@ -159,6 +159,8 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                 dataTransfer[0] = mGoogleMap;
                 dataTransfer[1] = url;
                 dataTransfer[2]="Hospital";
+                dataTransfer[3]=latitude;
+                dataTransfer[4]=longitude;
 
 
 
@@ -170,6 +172,23 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Doctor clicked", Toast.LENGTH_SHORT).show();
+
+                Object dataTransfer[] = new Object[5];
+
+                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+
+                mGoogleMap.clear();
+                String hospital = "hospital";
+                String url = getUrl(latitude, longitude, hospital);
+
+                dataTransfer[0] = mGoogleMap;
+                dataTransfer[1] = url;
+                dataTransfer[2]="Doctor";
+                dataTransfer[3]=latitude;
+                dataTransfer[4]=longitude;
+
+                getNearbyPlacesData.execute(dataTransfer);
+
             }
         });
     }

@@ -2,7 +2,6 @@ package com.strive.maway.maway;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -27,12 +26,18 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private String googlePlacesData;
     private GoogleMap mMap;
-    String url;
+    private String url;
     private Firebase mRef;
-    String TypeWish;
-    String typeOfPlace="";
+    private String TypeWish;
+    private String typeOfPlace;
 
-    List<HashMap<String,String>> nearbyPlaces2 ;
+    private List<HashMap<String,String>> nearbyPlaces2 ;
+    private String placeName;
+    private String vicinity;
+    private double lat,currentLat;
+    private double lng, currentLng;
+    private Firebase key;
+    private boolean shown=false;
 
 
 
@@ -41,6 +46,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         mMap = (GoogleMap)objects[0];
         url = (String)objects[1];
         TypeWish=(String) objects[2];
+        currentLat = (double) objects[3];
+        currentLng = (double) objects [4];
 
 
         DownloadURL downloadURL = new DownloadURL();
@@ -65,40 +72,72 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //we need a list where we will store our locations that we injected
+                ArrayList<LocationInformations> locationInformationsList = new ArrayList<>();
 
                 ArrayList<Location> typeList=new ArrayList<>();
+
                 for(DataSnapshot innerData : dataSnapshot.getChildren())
-                {
+                {   String lat,lng, placeName,source, vicinity;
                     String id = mRef.getKey();
                     String type;
-
                     Log.e("keys-----", innerData.getKey());
+
+                    // initialise our LocationInformation that we will add to our list if it's stored only in firebase
+
+                    LocationInformations Linfo = new LocationInformations(innerData.getKey(),"","","","","","");
 
 
                     for ( DataSnapshot innerInnerData : innerData.getChildren()) {
 
                         String key = innerInnerData.getKey();
                         Log.e("keys*****", key);
+
+
                         switch (key)
                         {
-
                             case "type" :
-                                //code
-                                //typeOfPlace   = innerInnerData.getValue(String.class);
 
                                 type = innerInnerData.getValue(String.class);
                                 Location L  = new Location(innerData.getKey(),type);
                                 typeList.add(L);
+                                Linfo.setType(type);
+                        }
+                        if(key.equals("latitude")){
+                            lat = innerInnerData.getValue(String.class);
+                            Linfo.setLatitude(lat);
+                        }
+                        if(key.equals("longitude")){
+                            lng = innerInnerData.getValue(String.class);
+                            Linfo.setLongitude(lng);
+                        }
+                        if(key.equals("place_name")){
+                            placeName = innerInnerData.getValue(String.class);
+                            Linfo.setPlaceName(placeName);
+                        }
+                        if(key.equals("vicinity")){
+                            vicinity =innerInnerData.getValue(String.class);
+                            Linfo.setVicinity(vicinity);
+                        }
+                        if(key.equals("source")){
+                            source=innerInnerData.getValue(String.class);
+                            Linfo.setSource(source);
                         }
                     }
-
-
-
-
-
+                    // If that location is injected then add to our list
+                    if(Linfo.getSource().equals("injected")){
+                        locationInformationsList.add(Linfo);
+                    }
                 }
-                Log.e("hambouk",typeList.toString());
-                showNearbyPlaces(nearbyPlaces2,typeList);
+                if(nearbyPlaces2.isEmpty()){
+                    Log.e("empty", "list is empty ");
+                }
+                else{
+                    Log.d("notempty", "list not empty");
+                }
+                Log.d("typeList",typeList.toString());
+                Log.d("locationInformations",locationInformationsList.toString());
+                showNearbyPlaces(nearbyPlaces2,typeList,locationInformationsList);
 
             }
 
@@ -108,23 +147,14 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             }
         });
 
-       /* readData(new FirebaseCallBack() {
 
-            @Override
-            public void onCallBack(List<Location> list) {
-
-            }
-        });*/
-
-
-        //showNearbyPlaces(nearbyPlaceList,typeList);
     }
 
     public GetNearbyPlacesData() {
         super();
     }
 
-    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations)
+    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations,ArrayList<LocationInformations> locationInformationsList)
     {
 
 
@@ -136,10 +166,10 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlaceList.get(i);
 
-            String placeName = googlePlace.get("place_name");
-            String vicinity = googlePlace.get("vicinity");
-            double lat = Double.parseDouble( googlePlace.get("lat"));
-            double lng = Double.parseDouble( googlePlace.get("lng"));
+            placeName = googlePlace.get("place_name");
+            vicinity = googlePlace.get("vicinity");
+            lat = Double.parseDouble( googlePlace.get("lat"));
+            lng = Double.parseDouble( googlePlace.get("lng"));
 
             LatLng latLng = new LatLng( lat, lng);
             markerOptions.position(latLng);
@@ -166,48 +196,19 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             Log.d("typeofplace2", typeofplace+"faregh");
 
 
-            Firebase mRef2= mRef.child(keyLocation);
 
-            // get the type of the  place
+            key = mRef.child(keyLocation);
+            typeOfPlace = getType(Locations,keyLocation);
 
-          /*  mRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+            if (typeOfPlace==null) {
 
-
-                    for(DataSnapshot innerData : dataSnapshot.getChildren())
-                    {
-                        String key = innerData.getKey();
-
-                        switch (key)
-                        {
-                            case "type":
-                                //code here
-                                typeOfPlace   = innerData.getValue(String.class);
-                                Log.d("hedatype", typeOfPlace);
-
-                                break;
-                        }
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });*/
-
-
-
-            Firebase key = mRef.child(keyLocation);
-            if (key==null){
             key.child("place_name").setValue(placeName);
             key.child("vicinity").setValue(vicinity);
             key.child("latitude").setValue(lat);
             key.child("longitude").setValue(lng);
             key.child("type").setValue("Hospital");
+            key.child("source").setValue("Google");
+
             }
 
 
@@ -219,10 +220,26 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
 
 
-            if (TypeWish.equals(getType(Locations,keyLocation))){
+            if (TypeWish.equals(typeOfPlace)){
                 mMap.addMarker(markerOptions);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
+
+                Object dataTransfer[] = new Object[3];
+                String urlDirection = getDirectionsUrl(currentLat,currentLng,lat,lng);
+                dataTransfer[0] =mMap;
+                dataTransfer[1]= urlDirection;
+                dataTransfer[2] = new LatLng(lat,lng);
+                GetDirectionsData getDirectionsData = new GetDirectionsData();
+                getDirectionsData.execute(dataTransfer);
+                HashMap<String,String> durationAndDistance = new HashMap<>();
+
+
+                durationAndDistance = getDirectionsData.getDurationAndDistance();
+
+                Log.e("duration and distance","distance "+getDirectionsData.getDurationAndDistance().get("duration") );
+
 
             }
 
@@ -230,42 +247,27 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
 
         }
+        for(int k=0;k<locationInformationsList.size();k++){
+
+            if (TypeWish.equals(getType(Locations,locationInformationsList.get(k).getKey()))){
+                double latitude = Double.parseDouble(locationInformationsList.get(k).getLatitude());
+                double longitude = Double.parseDouble(locationInformationsList.get(k).getLongitude());
+                LatLng latLng = new LatLng(latitude,longitude);
+                String placeName = locationInformationsList.get(k).getPlaceName();
+                String vicinity = locationInformationsList.get(k).getVicinity();
+
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title(placeName + " : "+ vicinity);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                mMap.addMarker(markerOptions);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+            }
+        }
 
     }
 
-    /*
-    private void readData(final FirebaseCallBack firebaseCallBack){
-        ValueEventListener valueEventListener= new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds:dataSnapshot.getChildren()){
-
-
-                    String Type= ds.child("type").getValue(String.class);
-                    String ID =ds.getKey();
-                    Location L = new Location(ID,Type);
-
-                    typeList.add(L);
-
-
-                }
-                firebaseCallBack.onCallBack(typeList);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        };
-        mRef.addListenerForSingleValueEvent(valueEventListener);
-
-
-    }
-    //create interface First
-    public  interface FirebaseCallBack{
-        void onCallBack(List<Location> list);
-
-    }*/
 
     private  String getType(ArrayList<Location> listoftypes,String key){
 
@@ -277,7 +279,21 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             }
         }
 
-        return "";
+        return null;
     }
+
+    private String getDirectionsUrl(double currentLat, double currentLng ,double latLocation,double lngLocation){
+
+        StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+        googleDirectionsUrl.append("origin="+currentLat+","+currentLng);
+        googleDirectionsUrl.append("&destination="+latLocation+","+lngLocation);
+        googleDirectionsUrl.append("&key="+"AIzaSyB68rL3FyWgpVIPpVCc0h_wIOIsUXayBRQ");
+
+        return googleDirectionsUrl.toString();
+
+
+    }
+
+
 
 }
