@@ -24,6 +24,16 @@ import java.util.HashMap;
         protected String distance;
          LatLng latLng;
 
+
+    public interface AsyncResponse {
+        void processFinish(HashMap<String,String> directionsList);
+    }
+
+    public AsyncResponse listOfDistance = null;
+
+    public GetDirectionsData(AsyncResponse delegate){
+        this.listOfDistance = delegate;
+    }
         @Override
         protected String doInBackground(Object... objects) {
 
@@ -42,31 +52,30 @@ import java.util.HashMap;
 
             return googleDirectionsData;
         }
-        //s represents jsonData
+        //this interface will make us able to return directionsList
+
+
+    //s represents jsonData
         @Override
         protected void onPostExecute(String s) {
 
             //we need hashmap :
+
             HashMap<String,String> directionsList = null;
             DataParser parser = new DataParser();
             directionsList = parser.parseDirections(s);
-            duration = directionsList.get("duration");
+            listOfDistance.processFinish(directionsList);
+           /* duration = directionsList.get("duration");
             String[] distanceParts = directionsList.get("distance").split(" ");
-            distance = distanceParts[0];
+            distance = distanceParts[0];*/
 
             //i need somewhat to return this in getNearbyPlacesData
         }
-        public HashMap<String,String> getDurationAndDistance(){
-
-            HashMap<String,String> durationAndDistance = new HashMap<>();;
-            durationAndDistance.put("duration",duration);
-            durationAndDistance.put("distance",distance);
-
-            return durationAndDistance;
-
-        }
 
 
-    }
+}
+
+
+
 
 
