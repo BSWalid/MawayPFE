@@ -37,7 +37,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     private double lat,currentLat;
     private double lng, currentLng;
     private Firebase key;
-    private boolean shown=false;
+    HashMap<String,String> durationAndDistance = new HashMap<>();
 
 
 
@@ -226,19 +226,23 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
 
+
                 Object dataTransfer[] = new Object[3];
                 String urlDirection = getDirectionsUrl(currentLat,currentLng,lat,lng);
                 dataTransfer[0] =mMap;
                 dataTransfer[1]= urlDirection;
                 dataTransfer[2] = new LatLng(lat,lng);
-                GetDirectionsData getDirectionsData = new GetDirectionsData();
+                GetDirectionsData getDirectionsData = new GetDirectionsData(new GetDirectionsData.AsyncResponse() {
+                    @Override
+                    public void processFinish(HashMap<String, String> directionsList) {
+                        durationAndDistance = directionsList;
+                        Log.d("duration and distance", "processFinish: "+directionsList.get("distance"));
+
+                        //it didn't work
+                    }
+                });
                 getDirectionsData.execute(dataTransfer);
-                HashMap<String,String> durationAndDistance = new HashMap<>();
 
-
-                durationAndDistance = getDirectionsData.getDurationAndDistance();
-
-                Log.e("duration and distance","distance "+getDirectionsData.getDurationAndDistance().get("duration") );
 
 
             }
