@@ -22,17 +22,18 @@ import java.util.HashMap;
         String googleDirectionsData;
         protected String duration;
         protected String distance;
-         LatLng latLng;
+        LatLng latLng;
+        public AsyncResponse listOfDistance = null;
+
 
 
     public interface AsyncResponse {
         void processFinish(HashMap<String,String> directionsList);
     }
 
-    public AsyncResponse listOfDistance = null;
 
     public GetDirectionsData(AsyncResponse delegate){
-        this.listOfDistance = delegate;
+        listOfDistance = delegate;
     }
         @Override
         protected String doInBackground(Object... objects) {
