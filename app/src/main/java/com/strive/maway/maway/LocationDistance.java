@@ -11,6 +11,11 @@ public class LocationDistance {
     private String placeName;
     private String vicinity;
 
+
+
+    private String[] Path;
+
+
     public LocationDistance(double lat,double lng,float d,String pName,String v) {
         latitude = lat;
         longitude =lng;
@@ -18,6 +23,15 @@ public class LocationDistance {
         placeName = pName;
         vicinity =v;
     }
+
+    public String[] getPath() {
+        return Path;
+    }
+
+    public void setPath(String[] path) {
+        Path = path;
+    }
+
 
     public double getLatitude() {
         return latitude;

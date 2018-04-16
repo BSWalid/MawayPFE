@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.sql.Struct;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -111,12 +112,14 @@ public class DataParser{
     }
     public HashMap<String,String> parseDirections(String jsonData){
         JSONArray jsonArray = null;
+        JSONArray jsonArrayOfPath = null;
         JSONObject jsonObject;
 
         try {
             jsonObject = new JSONObject(jsonData);
             //the instruction bellow gives us the legs array
             jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs");
+
         } catch (JSONException e)
         {
             e.printStackTrace();
@@ -124,7 +127,52 @@ public class DataParser{
         return getDuration(jsonArray);
 
     }
-    private HashMap<String,String> getDuration(JSONArray googleDirectionsJson){
+
+    public String[] getPaths(JSONArray googleStepsJson )
+    {
+        int count = googleStepsJson.length();
+        String[] polylines = new String[count];
+
+        for(int i = 0;i<count;i++)
+        {
+            try {
+                polylines[i] = getPath(googleStepsJson.getJSONObject(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return polylines;
+    }
+
+    public String getPath(JSONObject googlePathJson)
+    {
+        String polyline = "";
+        try {
+            polyline = googlePathJson.getJSONObject("polyline").getString("points");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return polyline;
+    }
+    public String[] parseDirectionspath(String jsonData)
+    {
+        JSONArray jsonArray = null;
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(jsonData);
+            jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return getPaths(jsonArray);
+    }
+
+
+
+
+    private HashMap<String,String> getDuration(JSONArray googleDirectionsJson ){
 
         HashMap<String,String> googleDirectionsMap = new HashMap<>();
         try {
@@ -132,6 +180,8 @@ public class DataParser{
             String distance=googleDirectionsJson.getJSONObject(0).getJSONObject("distance").getString("text");
             googleDirectionsMap.put("duration",duration);
             googleDirectionsMap.put("distance",distance);
+
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -142,4 +192,7 @@ public class DataParser{
 
 
     }
+
+
+
 }

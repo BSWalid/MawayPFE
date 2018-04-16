@@ -1,5 +1,6 @@
 package com.strive.maway.maway;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,6 +13,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -340,6 +343,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         googleDirectionsUrl.append("&destination="+latLocation+","+lngLocation);
         googleDirectionsUrl.append("&key="+"AIzaSyB68rL3FyWgpVIPpVCc0h_wIOIsUXayBRQ");
 
+        Log.e("ulrofDirection",googleDirectionsUrl.toString() );
+
         return googleDirectionsUrl.toString();
 
 
@@ -360,12 +365,15 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
                 GetDirectionsData getDirectionsData = new GetDirectionsData(new GetDirectionsData.AsyncResponse() {
                     @Override
-                    public void processFinish(HashMap<String, String> directionsList) {
+                    public void processFinish(HashMap<String, String> directionsList,String [] paths) {
 
                         durationAndDistance = directionsList;
                         String[] distanceParts = directionsList.get("distance").split(" ");
+
+
                         float distance = Float.parseFloat(distanceParts[0]);
                         LocationDistance l = new LocationDistance(locationDistance.getLatitude(),locationDistance.getLongitude(),distance,locationDistance.getPlaceName(),locationDistance.getVicinity());
+                        l.setPath(paths);
                         addToList(l,n);
                     }
                 });
@@ -400,9 +408,28 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
              nearestLocation = listLocationDistance.get(0);
              displayLocations(listNearbyplaces,nearestLocation);
+
+
+
          }
 
      }
+    public void displayDirection(String[] directionsList)
+    {
+
+        int count = directionsList.length;
+
+        for(int i = 0;i<count;i++)
+        {
+            PolylineOptions options = new PolylineOptions();
+            options.color(Color.RED);
+            options.width(10);
+            Log.d("m3amarplz",directionsList[i]);
+            options.addAll(PolyUtil.decode(directionsList[i]));
+
+            mMap.addPolyline(options);
+        }
+    }
 
      public void displayLocations( ArrayList<LocationDistance> listPlaces, LocationDistance nearestLocation){
 
@@ -412,6 +439,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
          else{
              Log.e("SORTED LIST", "NOT EMPTY :D" );
          }
+
+
 
          for (LocationDistance l : listPlaces) {
              String placeName = l.getPlaceName();
@@ -429,6 +458,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
              mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
          }
+         displayDirection(nearestLocation.getPath());
          Log.e("nearestLocation", "displayLocations: "+nearestLocation.getPlaceName()+nearestLocation.getDistance() );
      }
 
