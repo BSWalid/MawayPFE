@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 
     public interface AsyncResponse {
-        void processFinish(HashMap<String,String> directionsList);
+        void processFinish(HashMap<String,String> directionsList,String [] theway );
     }
 
 
@@ -63,9 +63,12 @@ import java.util.HashMap;
             //we need hashmap :
 
             HashMap<String,String> directionsList = null;
+            String [] path =null;
             DataParser parser = new DataParser();
             directionsList = parser.parseDirections(s);
-            listOfDistance.processFinish(directionsList);
+            path = parser.parseDirectionspath(s);
+
+            listOfDistance.processFinish(directionsList,path);
            /* duration = directionsList.get("duration");
             String[] distanceParts = directionsList.get("distance").split(" ");
             distance = distanceParts[0];*/
