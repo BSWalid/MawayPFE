@@ -150,6 +150,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         hospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Object dataTransfer[] = new Object[5];
                 GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
                 Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
@@ -203,8 +204,6 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         googlePlaceUrl.append("&type="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
         googlePlaceUrl.append("&key="+"AIzaSyD0_7Gef4EHp5_yD4hssK_wryzUe0Zie-A");
-
-        Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
         return googlePlaceUrl.toString();
     }
@@ -280,7 +279,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     //la methode pour la position actuel
 
     private void getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 

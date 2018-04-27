@@ -89,7 +89,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 {   String lat,lng, placeName,source, vicinity;
                     String id = mRef.getKey();
                     String type;
-                    Log.e("keys-----", innerData.getKey());
 
                     // initialise our LocationInformation that we will add to our list if it's stored only in firebase
 
@@ -137,14 +136,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                         locationInformationsList.add(Linfo);
                     }
                 }
-                if(nearbyPlaces2.isEmpty()){
-                    Log.e("empty", "list is empty ");
-                }
-                else{
-                    Log.d("notempty", "list not empty");
-                }
-                Log.d("typeList",typeList.toString());
-                Log.d("locationInformations",locationInformationsList.toString());
+
                 showNearbyPlaces(nearbyPlaces2,typeList,locationInformationsList);
 
             }
@@ -166,7 +158,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     {
 
         for(int i = 0; i < nearbyPlaceList.size(); i++) {
-            MarkerOptions markerOptions = new MarkerOptions();
+
             HashMap<String, String> googlePlace = nearbyPlaceList.get(i);
 
             placeName = googlePlace.get("place_name");
@@ -175,28 +167,17 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             lng = Double.parseDouble(googlePlace.get("lng"));
 
             LatLng latLng = new LatLng(lat, lng);
-            markerOptions.position(latLng);
-            markerOptions.title(placeName + " : " + vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
 
 
             // Firebase information about the place
 
-            for (int j = 0; j < Locations.size(); j++) {
 
-
-                Log.d("pleaseEmchiListLoca", Locations.get(j).getType());
-                Log.d("pleaseEmchiListLoca", Locations.get(j).getID());
-
-                Log.d("position", "112");
-            }
 
             //adding locations to Firebase
 
             String keyLocation = googlePlace.get("place_id");
-            Log.d("pathKey", keyLocation);
             final String typeofplace = googlePlace.get("type_of_place");
-            Log.d("typeofplace2", typeofplace + "faregh");
 
 
             key = mRef.child(keyLocation);
@@ -217,10 +198,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             //normally we store here our data
 
 
-            Log.d("typeofplace", TypeWish);
-            Log.d("typeofplace2", typeOfPlace + "faregh");
-
-
             if (TypeWish.equals(typeOfPlace)) {
                 //get distance between two points
                 float results[] = new float[10];
@@ -232,44 +209,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             }
 
         }
-                /* mMap.addMarker(markerOptions);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
-
-
-                Object dataTransfer[] = new Object[3];
-                String urlDirection = getDirectionsUrl(currentLat,currentLng,lat,lng);
-                dataTransfer[0] =mMap;
-                dataTransfer[1]= urlDirection;
-                dataTransfer[2] = new LatLng(lat,lng);
-                GetDirectionsData getDirectionsData = new GetDirectionsData(new GetDirectionsData.AsyncResponse() {
-                    @Override
-                    public void processFinish(HashMap<String, String> directionsList) {
-                        durationAndDistance = directionsList;
-                        if(directionsList.isEmpty()){
-                            Log.e("empty", "processFinish: empty " );
-                        }
-                        else{
-                            Log.e("not empty", "processFinish: not empty ");
-                        }
-                        Log.e("duration and distance", "processFinish: "+directionsList.get("distance"));
-
-                        //it didn't work
-                    }
-                });
-                getDirectionsData.execute(dataTransfer);
-
-                  if(durationAndDistance.isEmpty()){
-
-                      Log.e("durationAndDistance", "empty :(" );
-
-
-                  }
-                  else
-                  {
-                      Log.e("durationAndDistance", "duration and distance not empty :D " );
-                  }*/
 
         for(int k=0;k<locationInformationsList.size();k++) {
 
@@ -278,7 +218,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
                 double latitude = Double.parseDouble(locationInformationsList.get(k).getLatitude());
                 double longitude = Double.parseDouble(locationInformationsList.get(k).getLongitude());
-                LatLng latLng = new LatLng(latitude, longitude);
                 String placeName = locationInformationsList.get(k).getPlaceName();
                 String vicinity = locationInformationsList.get(k).getVicinity();
 
@@ -309,13 +248,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         }
            //calculate distance of first 15 locations
                caculateDistance(listNearbyplaces);
-               /* MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(placeName + " : "+ vicinity);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                mMap.addMarker(markerOptions);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));*/
+
 
     }
 
@@ -382,8 +315,9 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
      public void addToList(LocationDistance l,int n){
          LocationDistance nearestLocation;
-         Log.e("location added", "addToList: "+l.getDistance()+" "+l.getPlaceName() );
+
          listLocationDistance.add(l);
+
          if((listLocationDistance.size()==15)|| (listLocationDistance.size()==n)){
              // sort my list and get the nearest location and then call a methode to display all my locations
              Collections.sort(listLocationDistance, new Comparator<LocationDistance>() {

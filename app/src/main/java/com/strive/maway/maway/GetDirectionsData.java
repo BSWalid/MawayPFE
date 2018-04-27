@@ -66,9 +66,7 @@ import java.util.HashMap;
             DataParser parser = new DataParser();
             directionsList = parser.parseDirections(s);
             listOfDistance.processFinish(directionsList);
-           /* duration = directionsList.get("duration");
-            String[] distanceParts = directionsList.get("distance").split(" ");
-            distance = distanceParts[0];*/
+
 
             //i need somewhat to return this in getNearbyPlacesData
         }
