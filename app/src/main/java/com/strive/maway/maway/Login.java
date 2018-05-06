@@ -110,6 +110,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
                  Intent intent = new Intent(Login.this,Home.class);
+                 intent.putExtra("password",passwordText);
+                 intent.putExtra("email",emailText);
                  startActivity(intent);
                  finish();
                 }
@@ -120,15 +122,22 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             }
         });
     }
+    private void Login(){
+
+
+
+    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sigupbtn:
+
                 startActivity(new Intent(this, SignUp.class));
                 break;
             case R.id.login :
-                 userLogin();
+//                LogUser();
+                userLogin();
                // startActivity(new Intent(this, Home.class));
                 break;
         }

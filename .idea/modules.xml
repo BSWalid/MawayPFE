@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/2018.iml" filepath="$PROJECT_DIR$/2018.iml" />
       <module fileurl="file://C:\Users\willy\Desktop\projects\dev\Test\MawayPFE2\MawayPFE.iml" filepath="C:\Users\willy\Desktop\projects\dev\Test\MawayPFE2\MawayPFE.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MawayPFE2.iml" filepath="$PROJECT_DIR$/MawayPFE2.iml" />
+      <module fileurl="file://C:\Users\Walid\Desktop\Projects\Android\MawayPFE27\04\2018\MawayPFE2.iml" filepath="C:\Users\Walid\Desktop\Projects\Android\MawayPFE27\04\2018\MawayPFE2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

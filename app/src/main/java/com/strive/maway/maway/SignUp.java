@@ -47,7 +47,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         username =(EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
-        progressBar = (ProgressBar) findViewById(R.id.signInProgressBar);
+        progressBar = (ProgressBar) findViewById(R.id.signUpProgressBar);
         //instantiate auth
         mAuth = FirebaseAuth.getInstance();
         findViewById(R.id.btnsignup).setOnClickListener(this);
@@ -110,7 +110,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
          return; //it stops the execution
      }
      //set progressbar visible
-      progressBar.setVisibility(View.VISIBLE);
+      //progressBar.setVisibility(View.VISIBLE);
      //the complete Listener detects the completion, it will take a complete listener interface object
      mAuth.createUserWithEmailAndPassword(emailText,passwordText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
          @Override
@@ -150,7 +150,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-    public void login(String email, String password , final String username){
+    public void login(final String email, final String password , final String username){
 
      mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -161,6 +161,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                      key.child("username").setValue(username);
 
                     Intent intent = new Intent(SignUp.this,Home.class);
+                    intent.putExtra("password",password);
+                    intent.putExtra("username",username);
+                    intent.putExtra("email",email);
                     startActivity(intent);
                     finish();
                 }

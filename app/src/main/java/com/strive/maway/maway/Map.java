@@ -225,7 +225,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        MapsInitializer.initialize(getContext());
+        MapsInitializer.initialize(getActivity().getApplicationContext());
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -233,7 +233,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
         // hna ndirou centralisation nta3 Current location of the phone
         buildGoogleApiClient();
-        getDeviceLocation();
+
 
 
         if (ActivityCompat.checkSelfPermission(getContext(),
@@ -242,6 +242,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
             return;
         }
+        getDeviceLocation();
 
         mGoogleMap.setMyLocationEnabled(true);
 
@@ -274,7 +275,12 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     // change   Camera position Method
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG , "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        if (mGoogleMap == null){
+
+            Toast.makeText(getActivity().getApplicationContext(),"Eror mapNull", Toast.LENGTH_SHORT).show();
+
+        }else {        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        }
     }
 
     //la methode pour la position actuel
@@ -282,7 +288,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity().getApplicationContext());
 
         try{
 
