@@ -1,7 +1,6 @@
 package com.strive.maway.maway;
 
 
-import android.*;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
@@ -132,8 +131,10 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
         isServicesOK();
+
         mMapView = (MapView) mView.findViewById(R.id.map);
         getLocationPermission();
 
@@ -141,8 +142,6 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
             mMapView.onCreate(null);
             mMapView.onResume();
             mMapView.getMapAsync(this);
-
-
         }
 
 
@@ -229,7 +228,6 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
-
         // hna ndirou centralisation nta3 Current location of the phone
         buildGoogleApiClient();
         getDeviceLocation();
@@ -251,6 +249,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     //Method From Github to check if the user has the right Version of the services
 
     public boolean isServicesOK(){
+
         Log.d(TAG, "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
@@ -356,7 +355,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     @Override
     public void onLocationChanged(Location location) {
 
-        // New location has now been determined
+
         // New location has now been determined
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
@@ -367,7 +366,9 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         latitude=location.getLatitude();
         longitude = location.getLongitude();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+
     }
 
     @Override

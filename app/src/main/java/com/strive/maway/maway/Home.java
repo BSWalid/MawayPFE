@@ -21,43 +21,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
 
-public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
-   /* @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onMapReady :Map is ready here ");
-       */
-
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     TextView  name ;
-    FirebaseAuth mAuth;
     Firebase mRef;
     String username;
     TextView Logout;
-    GoogleMap mMap;
-  /*  private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
-    private static String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final String TAG = "Home";
-    private Boolean mLocationPermissionGranted = false;
-*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +134,14 @@ public class Home extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_addlocation) {
+            // open fragment
+
+            addLocationRequest mainFragment = new addLocationRequest();
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+
+            ft.replace(R.id.content,mainFragment, "main").commit();
+
             // Handle the camera action
         } else if (id == R.id.nav_reportlocation) {
 
@@ -186,14 +173,14 @@ public class Home extends AppCompatActivity
                         case "username":
                             //code here
                             username = innerData.getValue(String.class);
-                            name.setText("Welcome "+username);
+                            if (name!=null)
+                            {name.setText("Welcome "+username);}
                             break;
 
                     }
 
 
                 }
-                //name.setText("Welcome "+username);
 
             }
 
@@ -202,10 +189,8 @@ public class Home extends AppCompatActivity
 
             }
         });
-
-
-
     }
+
 
 
 }
