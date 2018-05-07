@@ -9,6 +9,9 @@ import android.location.Location;
 
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -20,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -55,6 +59,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     private LocationRequest mLocationRequest;
     private long UPDATE_INTERVAL = 60* 1000 *5;  /*  5 d9aye9  */
     private long FASTEST_INTERVAL = 60* 1000 *5;  //2 seconds
+    ProgressBar progressBar;
 
 
     private static final float DEFAULT_ZOOM = 15f;
@@ -147,9 +152,14 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
 
 
+
+
         hospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TestConnections
+                progressBar.setVisibility(view.VISIBLE);
+                if(isConnected()){
                 Object dataTransfer[] = new Object[5];
                 GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
                 Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
@@ -165,8 +175,11 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
 
                 getNearbyPlacesData.execute(dataTransfer);
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
-            }
+            }else{
+                    Toast.makeText(getActivity().getApplicationContext(),"No connection Availbles", Toast.LENGTH_SHORT).show();
+                }}
         });
         doctor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +230,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         mView = inflater.inflate(R.layout.fragment_map, container, false);
         hospital = mView.findViewById(R.id.hospitalclick);
         doctor = mView.findViewById(R.id.doctorclick);
+        progressBar = mView.findViewById(R.id.MapProgressBar);
         return mView;
     }
 
@@ -246,6 +260,26 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
         mGoogleMap.setMyLocationEnabled(true);
 
+    }
+
+
+    //test Connection
+    private boolean isConnected(){
+        ConnectivityManager connectivityManager = (ConnectivityManager)getActivity()
+                                                  .getSystemService(getActivity().getApplicationContext()
+                                                  .CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()== NetworkInfo.State.CONNECTED){
+
+
+
+
+
+            return true;
+        }
+
+
+        return false;
     }
 
 
