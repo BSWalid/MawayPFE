@@ -140,7 +140,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
 
                         <EditText
                             style="@style/Widget.AppCompat.EditText"
-                            android:text="darck1996"
+                            android:text="darck123"
                             android:layout_width="200dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2.5"

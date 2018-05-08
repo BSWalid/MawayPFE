@@ -62,7 +62,10 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
-        <activity android:name=".AdminPanel"></activity>
+        <activity
+            android:name=".Admin.AdminPael"
+            android:label="@string/title_activity_admin_pael"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -51,12 +51,13 @@ public class RequestAddDialog extends AppCompatDialogFragment {
                         String locationName = locationNameEditText.getText().toString();
                         String locationType = locationTypeEditText.getText().toString();
                         String locationVicinity = locationVicinityEditText.getText().toString();
-                        Firebase key = requestRef.child(mUid).push();
+                        Firebase key = requestRef.push();
                         key.child("latitude").setValue(latitude);
                         key.child("longitude").setValue(longitude);
                         key.child("placeName").setValue(locationName);
                         key.child("type").setValue(locationType);
                         key.child("vicinity").setValue(locationVicinity);
+                        key.child("RequestSender").setValue(mUid);
                     }
                 });
         locationNameEditText = view.findViewById(R.id.dialog_LocationName);
