@@ -12,9 +12,17 @@ public class LocationInformations {
     private String type;
     private String source;
     private String vicinity;
+    private String Sender;
+    //this Sender Variable is used Only in the AdminPanel when this object is a Request
+    public String getSender() {
+        return Sender;
+    }
 
+    public void setSender(String sender) {
+        Sender = sender;
+    }
 
-    public LocationInformations(String key,String latitude, String longitude,String placeName,String type, String source,String vicinity) {
+    public LocationInformations(String key, String latitude, String longitude, String placeName, String type, String source, String vicinity) {
 
         this.key = key;
         this.latitude = latitude;

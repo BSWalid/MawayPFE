@@ -39,6 +39,12 @@ public class AdminPael extends AppCompatActivity {
     private ViewPager mViewPager;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_pael);
