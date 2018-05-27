@@ -1,4 +1,5 @@
-package com.strive.maway.maway.Admin;
+package com.strive.maway.maway;
+
 
 
 import android.content.Context;
@@ -7,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +16,12 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.strive.maway.maway.Admin.RequestsItemAdapter;
 import com.strive.maway.maway.Location;
 import com.strive.maway.maway.LocationInformations;
-import com.strive.maway.maway.R;
-import com.strive.maway.maway.RequestsItemAdapter;
-import com.strive.maway.maway.UserItemAdapter;
+
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,7 +76,7 @@ public class AddLocationRequests extends Fragment {
 
                     // initialise our LocationInformation that we will add to our list if it's stored only in firebase
 
-                    LocationInformations Linfo = new LocationInformations(innerData.getKey(),"","","","","","");
+                    LocationInformations Linfo = new LocationInformations(innerData.getKey(),"","","","","","","");
 
 
                     for ( DataSnapshot innerInnerData : innerData.getChildren()) {

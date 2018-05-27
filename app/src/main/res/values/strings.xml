@@ -9,8 +9,8 @@
     <string name="email_required">Email is required</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="title_activity_admin_pael">Admin Panel</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_admin_pael">AdminPael</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

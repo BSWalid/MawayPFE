@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -19,12 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
-    Button loginbtn;
-    TextView sigupbtn;
+
     EditText email;
     ProgressBar progressBar;
     EditText password;
     FirebaseAuth mAuth;
+    TextView forgotPasswordBtn;
 
 
     @Override
@@ -40,21 +42,24 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        Window w = getWindow();
+        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         //initializing mAuth, from this auth we can call signIn method
 
         mAuth = FirebaseAuth.getInstance();
         password = (EditText) findViewById(R.id.passwordEditText);
         email = (EditText) findViewById(R.id.emailEditText);
         progressBar = (ProgressBar) findViewById(R.id.signInProgressBar);
+        forgotPasswordBtn =(TextView) findViewById(R.id.forgotPassword);
 
         //setting on click listeners
 
         findViewById(R.id.sigupbtn).setOnClickListener(this);
         findViewById(R.id.login).setOnClickListener(this);
+        findViewById(R.id.forgotPassword).setOnClickListener(this);
 
 
-      /* Our old methode
+        /* Our old methode
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +106,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             password.requestFocus(); //request the focus to the password
             return; //it stops the execution
         }
-           //set progressbar visible
+        //set progressbar visible
         progressBar.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(emailText,passwordText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -109,11 +114,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                 progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
-                 Intent intent = new Intent(Login.this,Home.class);
-                 intent.putExtra("password",passwordText);
-                 intent.putExtra("email",emailText);
-                 startActivity(intent);
-                 finish();
+                    Intent intent = new Intent(Login.this,Home.class);
+                    intent.putExtra("password",passwordText);
+                    intent.putExtra("email",emailText);
+                    startActivity(intent);
+                    finish();
                 }
                 else
                 {
@@ -123,8 +128,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
     }
     private void Login(){
-
-
 
     }
 
@@ -138,8 +141,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.login :
 //                LogUser();
                 userLogin();
-               // startActivity(new Intent(this, Home.class));
+                // startActivity(new Intent(this, Home.class));
                 break;
+            case R.id.forgotPassword :{
+                openDialog();
+                break;
+            }
         }
+    }
+
+    public void openDialog(){
+
+        ResetPasswordDialog resetPasswordDialog= new ResetPasswordDialog();
+        resetPasswordDialog.show(getSupportFragmentManager(),"ResetPasswordDialog");
+
+
     }
 }

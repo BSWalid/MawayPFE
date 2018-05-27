@@ -1,0 +1,15 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <!-- background -->
+            <solid android:color="@color/blue_search" />
+            <!-- border -->
+
+
+            <!-- corner roundness -->
+            <corners android:topLeftRadius="5dp"/>
+            <corners android:topRightRadius="5dp"/>
+
+        </shape>
+    </item>
+</selector>

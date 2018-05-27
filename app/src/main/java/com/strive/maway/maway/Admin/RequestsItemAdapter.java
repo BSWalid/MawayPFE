@@ -1,4 +1,4 @@
-package com.strive.maway.maway;
+package com.strive.maway.maway.Admin;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,13 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.strive.maway.maway.LocationInformations;
+import com.strive.maway.maway.R;
+
 import java.util.List;
 
 /**
  * Created by Walid on 09/05/2018.
  */
 
-public class RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdapter.MyViewBolder> {
+public class  RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdapter.MyViewBolder> {
     List<LocationInformations> items;
     Context context;
 
@@ -46,14 +49,14 @@ public class RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdapt
     public  class MyViewBolder extends RecyclerView.ViewHolder {
         LocationInformations itemerino;
         Context context;
-        TextView lat,lang,placename,type;
+        TextView lat,lang,placename,vicinity;
         public MyViewBolder(final View itemView){
             super(itemView);
 
-            lat = (TextView) itemView.findViewById(R.id.lat);
-            type= (TextView) itemView.findViewById(R.id.placetype);
 
-            lang=(TextView) itemView.findViewById(R.id.lang);
+            vicinity= (TextView) itemView.findViewById(R.id.vicinity);
+
+
             placename=(TextView) itemView.findViewById(R.id.placename);
 
         }
@@ -61,9 +64,9 @@ public class RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdapt
         public  void display (LocationInformations item , Context context){
             this.itemerino =item;
             this.context=context;
-            lat.setText(item.getLatitude());
-            type.setText(item.getType());
-            lang.setText(item.getLongitude());
+
+
+            vicinity.setText(item.getVicinity());
             placename.setText(item.getPlaceName());
 
 

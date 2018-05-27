@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.strive.maway.maway.LocationInformations;
 import com.strive.maway.maway.R;
-import com.strive.maway.maway.UserItemAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public class Users extends Fragment {
                     ,"5"
                     ,"5"
                     ,"5","5"
-                    ,"5");
+                    ,"5","5");
             items.add(L);
 
             UserItemAdapter adapter = new UserItemAdapter(items,getActivity().getApplicationContext());
