@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.strive.maway.maway.AdminDeleteLocationDialog;
 import com.strive.maway.maway.LocationInformations;
 import com.strive.maway.maway.R;
 import com.strive.maway.maway.RequestDeleteDialog;
@@ -32,30 +33,30 @@ import java.util.List;
  * Created by Walid on 09/05/2018.
  */
 
-public class  RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdapter.MyViewBolder> {
+public class  DeleteRequestItemAdapter  extends RecyclerView.Adapter<DeleteRequestItemAdapter.MyViewBolder> {
     List<LocationInformations> items;
     Context context;
     FragmentManager fm ;
     DecimalFormat df = new DecimalFormat("#.##");
 
 
-    public RequestsItemAdapter(List<LocationInformations> items, Context context,FragmentManager fm) {
+    public DeleteRequestItemAdapter(List<LocationInformations> items, Context context,FragmentManager fm) {
         this.items = items;
         this.context = context;
         this.fm = fm;
     }
 
     @Override
-    public RequestsItemAdapter.MyViewBolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DeleteRequestItemAdapter.MyViewBolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_requests_item,parent,false);
-        return new RequestsItemAdapter.MyViewBolder(view);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.delete_location_request_item,parent,false);
+        return new DeleteRequestItemAdapter.MyViewBolder(view);
     }
 
 
 
     @Override
-    public void onBindViewHolder(RequestsItemAdapter.MyViewBolder holder, int position) {
+    public void onBindViewHolder(DeleteRequestItemAdapter.MyViewBolder holder, int position) {
         LocationInformations item = items.get(position);
         holder.display(item,context);
 
@@ -73,13 +74,11 @@ public class  RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdap
         ImageView itemclick;
         public MyViewBolder(final View itemView){
             super(itemView);
-            lat = (TextView)itemView.findViewById(R.id.lat) ;
-            lang = ( TextView) itemView.findViewById(R.id.lang);
-            vicinity= (TextView) itemView.findViewById(R.id.vicinity);
-            itemclick=(ImageView) itemView.findViewById(R.id.itemclick);
-
-
-            placename=(TextView) itemView.findViewById(R.id.placename);
+            lat = (TextView)itemView.findViewById(R.id.latdelete) ;
+            lang = ( TextView) itemView.findViewById(R.id.langdelete);
+            vicinity= (TextView) itemView.findViewById(R.id.vicinitydelete);
+            itemclick=(ImageView) itemView.findViewById(R.id.itemclickdelete);
+            placename=(TextView) itemView.findViewById(R.id.placenamedelete);
 
         }
 
@@ -94,7 +93,7 @@ public class  RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdap
             itemclick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                  //HERE the DG should be created
+                    //HERE the DG should be created
 
                     Bundle args = new Bundle();
 
@@ -104,9 +103,11 @@ public class  RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdap
                     args.putString("placetype",item.getType());
                     args.putString("vicinity",item.getVicinity());
                     args.putString("RequestID",item.getRequestID());
+                    args.putString("placeID",item.getKey());
+                    args.putString("Justification",item.getJustification());
 
 
-                    addLocationAdminDialog addDialog= new addLocationAdminDialog();
+                    AdminDeleteLocationDialog addDialog= new AdminDeleteLocationDialog();
                     addDialog.setArguments(args);
 
 

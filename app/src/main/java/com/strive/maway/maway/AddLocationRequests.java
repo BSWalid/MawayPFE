@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class AddLocationRequests extends Fragment {
     View mView;
     Context C;
     private  Firebase mRef;
+    FragmentManager fm ;
 
 
     public AddLocationRequests() {
@@ -43,7 +45,7 @@ public class AddLocationRequests extends Fragment {
 
 
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_add_location_requests, container, false);
+               mView = inflater.inflate(R.layout.fragment_add_location_requests, container, false);
         C=getActivity().getApplicationContext();
 
         return mView;
@@ -52,6 +54,7 @@ public class AddLocationRequests extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fm = getActivity().getSupportFragmentManager();
         RequestUpdate();
     }
 
@@ -69,7 +72,7 @@ public class AddLocationRequests extends Fragment {
                 ArrayList<Location> typeList=new ArrayList<>();
 
                 for(DataSnapshot innerData : dataSnapshot.getChildren())
-                {   String lat,lng, placeName,source, vicinity,sender;
+                {   String lat,lng, placeName,source, vicinity,sender,requestID;
                     String id = mRef.getKey();
                     String type;
 
@@ -117,13 +120,19 @@ public class AddLocationRequests extends Fragment {
                             sender=innerInnerData.getValue(String.class);
                             Linfo.setSender(sender);
                         }
+                        if(key.equals("requestID")){
+                            requestID=innerInnerData.getValue(String.class);
+                            Linfo.setRequestID(requestID);
+                        }
                     }
                     // If that location is injected then add to our list
 
                         locationInformationsList.add(Linfo);
 
                 }
-                RequestsItemAdapter adapter = new RequestsItemAdapter(locationInformationsList,C);
+
+                RequestsItemAdapter adapter = new RequestsItemAdapter(locationInformationsList,C,fm);
+
                 RecyclerView rv = ( RecyclerView) mView.findViewById(R.id.LocationAddRequests);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(C,LinearLayoutManager.VERTICAL,false);
                layoutManager.setStackFromEnd(true);

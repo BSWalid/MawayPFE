@@ -21,9 +21,13 @@
             android:id="@+id/AdminBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@color/colorPrimaryDark"
             android:visibility="gone"
-           ></LinearLayout>
+            
+            
+           > <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_admin"/></LinearLayout>
     </LinearLayout>
 
     <LinearLayout

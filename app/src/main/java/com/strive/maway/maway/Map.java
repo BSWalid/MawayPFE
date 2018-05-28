@@ -332,7 +332,10 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
             public void onInfoWindowClick(Marker marker) {
                 locationLatitude = marker.getPosition().latitude;
                 locationLongitude = marker.getPosition().longitude;
-                openDialog();
+                LocationDistance l =(LocationDistance) marker.getTag();
+
+
+                openDialog(l);
             }
         });
 
@@ -518,11 +521,15 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         }
     }
 
-    public void openDialog(){
+    public void openDialog(LocationDistance l){
 
         Bundle args = new Bundle();
         args.putDouble("latitude",locationLatitude);
         args.putDouble("longitude",locationLongitude);
+        args.putString("placename",l.getPlaceName());
+        args.putString("vicinity",l.getVicinity());
+        args.putString("placeID",l.getPlaceID());
+
         RequestDeleteDialog requestDeleteDialog= new RequestDeleteDialog();
         requestDeleteDialog.setArguments(args);
         requestDeleteDialog.show(getActivity().getSupportFragmentManager(),"RequestDeleteDialog");

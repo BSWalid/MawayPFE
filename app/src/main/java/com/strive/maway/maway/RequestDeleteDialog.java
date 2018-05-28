@@ -22,12 +22,18 @@ public class RequestDeleteDialog extends AppCompatDialogFragment {
     private EditText justificationEditText;
     Firebase requestRef;
     double latitude,longitude;
+    String placename,placeID,vicinity,sender;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         latitude = getArguments().getDouble("latitude");
         longitude= getArguments().getDouble("longitude");
+        placename = getArguments().getString("placename");
+        placeID = getArguments().getString("placeID");
+        vicinity = getArguments().getString("vicinity");
+
+
 
         Firebase.setAndroidContext(getContext());
 
@@ -50,10 +56,15 @@ public class RequestDeleteDialog extends AppCompatDialogFragment {
                         String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String justification = justificationEditText.getText().toString();
 
-                        Firebase key = requestRef.child(mUid).push();
+                        Firebase key = requestRef.push();
                         key.child("latitude").setValue(latitude);
                         key.child("longitude").setValue(longitude);
                         key.child("justification").setValue(justification);
+                        key.child("plance_name").setValue(placename);
+                        key.child("vicinity").setValue(vicinity);
+                        key.child("place_ID").setValue(placeID);
+                        key.child("requestID").setValue(key.getKey());
+                        key.child("Request_Sender").setValue(mUid);
                       ;
                     }
                 });

@@ -12,7 +12,26 @@ public class LocationInformations {
     private String type;
     private String source;
     private String vicinity;
-    private String Sender,doctorType;
+    private String Justification;
+
+
+    public String getJustification() {
+        return Justification;
+    }
+
+    public void setJustification(String justification) {
+        Justification = justification;
+    }
+
+    public String getRequestID() {
+        return RequestID;
+    }
+
+    public void setRequestID(String requestID) {
+        RequestID = requestID;
+    }
+
+    private String Sender,doctorType,RequestID;
     //this Sender Variable is used Only in the AdminPanel when this object is a Request
     public String getSender() {
         return Sender;

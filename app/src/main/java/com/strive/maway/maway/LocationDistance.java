@@ -10,8 +10,15 @@ public class LocationDistance {
     private float distance;
     private String placeName;
     private String vicinity;
+    private  String placeID;
 
+    public String getPlaceID() {
+        return placeID;
+    }
 
+    public void setPlaceID(String placeID) {
+        this.placeID = placeID;
+    }
 
     private String[] Path;
 

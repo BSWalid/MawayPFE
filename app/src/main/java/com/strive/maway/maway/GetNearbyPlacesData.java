@@ -150,6 +150,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                             source=innerInnerData.getValue(String.class);
                             Linfo.setSource(source);
                         }
+
+
                     }
                     // If that location is injected then add to our list
                     if(Linfo.getSource().equals("injected")){
@@ -236,6 +238,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 float distance = results[0] / 1000;
 
                 LocationDistance locationDistance = new LocationDistance(lat, lng, distance, placeName, vicinity);
+                locationDistance.setPlaceID(keyLocation);
                 listNearbyplaces.add(locationDistance);
             }
 
@@ -263,8 +266,11 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 android.location.Location.distanceBetween(currentLat, currentLng, latitude, longitude, results);
                 float distance = results[0] / 1000;
                 if (distance < 40) {
+
                     LocationDistance locationDistance = new LocationDistance(latitude, longitude, distance, placeName, vicinity);
+                    locationDistance.setPlaceID(locationInformationsList.get(k).getKey());
                     listNearbyplaces.add(locationDistance);
+
                 }
 
             }
@@ -306,7 +312,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin="+currentLat+","+currentLng);
         googleDirectionsUrl.append("&destination="+latLocation+","+lngLocation);
-        googleDirectionsUrl.append("&key="+"AIzaSyB68rL3FyWgpVIPpVCc0h_wIOIsUXayBRQ");
+        googleDirectionsUrl.append("&key="+"AIzaSyApW_8nbxrgJcT6Zp_wwTUny2eR47AHFAM");
 
         Log.e("ulrofDirection",googleDirectionsUrl.toString() );
 
@@ -414,11 +420,15 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             double lng = l.getLongitude();
             LatLng latLng = new LatLng(lat,lng);
 
+
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
+
+
             markerOptions.title(placeName + " : "+ vicinity);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).alpha(0.7f);
-            mMap.addMarker(markerOptions);
+            mMap.addMarker(markerOptions).setTag(l);
+
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
