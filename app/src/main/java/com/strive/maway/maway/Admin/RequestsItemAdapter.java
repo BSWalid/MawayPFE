@@ -1,15 +1,25 @@
 package com.strive.maway.maway.Admin;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.strive.maway.maway.LocationInformations;
 import com.strive.maway.maway.R;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -19,6 +29,8 @@ import java.util.List;
 public class  RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdapter.MyViewBolder> {
     List<LocationInformations> items;
     Context context;
+    DecimalFormat df = new DecimalFormat("#.##");
+
 
     public RequestsItemAdapter(List<LocationInformations> items, Context context) {
         this.items = items;
@@ -50,24 +62,34 @@ public class  RequestsItemAdapter  extends RecyclerView.Adapter<RequestsItemAdap
         LocationInformations itemerino;
         Context context;
         TextView lat,lang,placename,vicinity;
+        ImageView itemclick;
         public MyViewBolder(final View itemView){
             super(itemView);
-
-
+            lat = (TextView)itemView.findViewById(R.id.lat) ;
+            lang = ( TextView) itemView.findViewById(R.id.lang);
             vicinity= (TextView) itemView.findViewById(R.id.vicinity);
+            itemclick=(ImageView) itemView.findViewById(R.id.itemclick);
 
 
             placename=(TextView) itemView.findViewById(R.id.placename);
 
         }
 
-        public  void display (LocationInformations item , Context context){
+        public  void display (LocationInformations item , final Context context){
             this.itemerino =item;
             this.context=context;
 
-
+            lat.setText("Lat: "+item.getLatitude().substring(0, Math.min(item.getLatitude().length(), 5)));
+            lang.setText("Lang: "+item.getLongitude().substring(0, Math.min(item.getLongitude().length(), 5)));
             vicinity.setText(item.getVicinity());
             placename.setText(item.getPlaceName());
+            itemclick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  //HERE the DG should be created
+
+                }
+            });
 
 
 

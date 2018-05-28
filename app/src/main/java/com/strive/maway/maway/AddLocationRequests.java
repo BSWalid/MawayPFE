@@ -126,6 +126,7 @@ public class AddLocationRequests extends Fragment {
                 RequestsItemAdapter adapter = new RequestsItemAdapter(locationInformationsList,C);
                 RecyclerView rv = ( RecyclerView) mView.findViewById(R.id.LocationAddRequests);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(C,LinearLayoutManager.VERTICAL,false);
+               layoutManager.setStackFromEnd(true);
                 rv.setLayoutManager(layoutManager);
                 rv.setAdapter(adapter);
 
