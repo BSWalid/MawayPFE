@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -42,6 +44,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         Firebase.setAndroidContext(this);
         mRef = new Firebase("https://maway-1520842395181.firebaseio.com/Users");
+        Window w = getWindow();
+        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 
         username =(EditText) findViewById(R.id.username);

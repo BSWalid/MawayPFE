@@ -25,35 +25,295 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="7"></LinearLayout>
+                android:weightSum="6"
+                android:orientation="horizontal"
+                android:layout_weight="6.5">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"></LinearLayout>
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/doctorMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:weightSum="6"
+                    android:orientation="vertical"
+                    android:background="@drawable/search">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/scrollDown"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.6"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:background="@drawable/doctor_search_arrow">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/arrow"></ImageView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.2"></LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.55"
+                        android:weightSum="4"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"></LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3.4"
+                            android:background="@drawable/search"
+                            android:weightSum="3"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:gravity="right|center_horizontal"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical">
+
+                                    <ImageView
+
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_horizontal"
+                                        android:background="@drawable/magnifying_glass" />
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Search"
+                                    android:fontFamily="@font/raleway_semibold"
+                                    android:textSize="17sp"/></LinearLayout>
+
+
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"></LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.2"></LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.4"
+                        android:weightSum="8"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="7.9"
+                            android:weightSum="8"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/dermatho"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3.825"
+                                android:gravity="center"
+                                android:textSize="14dp"
+                                android:text="Dermatologist"
+                                android:fontFamily="@font/raleway_semibold"></TextView>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.05"
+                                android:background="#ccc"></LinearLayout>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3.825"
+                                android:gravity="center"
+                                android:textSize="14dp"
+                                android:text="Dentist"
+                                android:fontFamily="@font/raleway_semibold"></TextView>
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:weightSum="4"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.1"
+                            >
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.3"></LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3.4"
+                                android:background="#ccc"></LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.3"></LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.4"
+                        android:weightSum="8"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="7.9"
+                            android:weightSum="8"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3.825"
+                                android:gravity="center"
+                                android:textSize="14dp"
+                                android:text="Gastrologist"
+                                android:fontFamily="@font/raleway_semibold"></TextView>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.05"
+                                android:background="#ccc"></LinearLayout>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3.825"
+                                android:gravity="center"
+                                android:textSize="14dp"
+                                android:text="Endocrinologist"
+                                android:fontFamily="@font/raleway_semibold"></TextView>
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:weightSum="4"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.1"
+                            >
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.3"></LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3.4"
+                                android:background="#ccc"></LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.3"></LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.4"
+                        android:weightSum="8"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3.825"
+                            android:gravity="center"
+                            android:textSize="14dp"
+                            android:text="Immunologist"
+                            android:fontFamily="@font/raleway_semibold"></TextView>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.05"
+                            android:background="#ccc"></LinearLayout>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3.825"
+                            android:gravity="center"
+                            android:textSize="14dp"
+                            android:text="Ophtalmologist"
+                            android:fontFamily="@font/raleway_semibold"></TextView>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"></LinearLayout>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:weightSum="6"
                 android:orientation="horizontal"
-               >
+                >
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"></LinearLayout>
+                    android:layout_weight="0.5"></LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:background="@color/White"
+                    android:layout_weight="5"
+                    android:background="@drawable/btn_search"
                     android:weightSum="10"
                     android:orientation="horizontal">
                     <LinearLayout
                         android:id="@+id/hospitalclick"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="4.95"
+                        android:layout_weight="4.925"
                         android:weightSum="3"
                         android:orientation="vertical">
                         <LinearLayout
@@ -68,6 +328,7 @@
                                 android:layout_height="0dp"
                                 android:layout_weight="1"></LinearLayout>
                             <ImageView
+                                android:id="@+id/hospitalIcon"
                                 android:layout_weight="2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
@@ -80,9 +341,11 @@
                             android:gravity="top|center_horizontal">
 
                             <TextView
+                                android:id="@+id/hospitalText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/raleway_bold"
+                                android:textColor="#787878"
                                 android:text="Hospital"
                                 android:textSize="17sp" />
                         </LinearLayout>
@@ -90,7 +353,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.05"
 
                         android:orientation="vertical"
                         android:weightSum="6">
@@ -115,7 +378,7 @@
                         android:id="@+id/doctorclick"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="4.95"
+                        android:layout_weight="5"
                         android:weightSum="3"
                         android:orientation="vertical">
                         <LinearLayout
@@ -125,11 +388,13 @@
                             android:gravity="center"
                             android:orientation="vertical"
                             android:weightSum="3">
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"></LinearLayout>
                             <ImageView
+                                android:id="@+id/doctorIcon"
                                 android:layout_weight="2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
@@ -146,6 +411,8 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/raleway_bold"
                                 android:text="Doctor"
+                                android:textColor="#787878"
+                                android:id="@+id/doctorText"
                                 android:textSize="17sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -153,10 +420,11 @@
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"></LinearLayout>
+                    android:layout_weight="0.5"></LinearLayout>
 
 
 
@@ -164,7 +432,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"></LinearLayout>
+                android:layout_weight="0.5"></LinearLayout>
 
 
 

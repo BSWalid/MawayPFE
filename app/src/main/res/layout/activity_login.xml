@@ -1,8 +1,8 @@
 
 <RelativeLayout
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:android="http://schemas.android.com/apk/res/android" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,16 +15,13 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
 
         >
 
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="6"
             >
-             <!--Logo and slogon part-->
+            <!--Logo and slogon part-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -102,6 +99,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
                             android:layout_width="200dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2.5"
+                            android:textColor="#fff"
                             android:backgroundTint="@android:color/background_light"
                             android:text="walid@walid.com"
 
@@ -140,7 +138,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
 
                         <EditText
                             style="@style/Widget.AppCompat.EditText"
-                            android:text="darck1996"
+                            android:text="darck123"
                             android:layout_width="200dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2.5"
@@ -150,6 +148,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
                             android:fontFamily="@font/raleway_bold"
                             android:gravity="center"
                             android:hint="Password"
+                            android:textColor="#fff"
                             android:inputType="textPassword"
                             android:singleLine="false"
                             android:textColorHint="@android:color/background_light"
@@ -185,6 +184,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
                                 android:layout_weight="0.5"
                                 android:gravity="top|center"
                                 android:text="Forgot password?"
+                                android:id="@+id/forgotPassword"
                                 android:textColor="@android:color/background_light"
                                 android:textSize="16dp"
                                 android:textStyle="bold"

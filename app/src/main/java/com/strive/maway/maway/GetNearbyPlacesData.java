@@ -33,7 +33,9 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     private GoogleMap mMap;
     private String url;
     private Firebase mRef;
-    private String TypeWish;
+    private String typeWish;
+    private String docWish;
+    private String doctorType;
     private String typeOfPlace;
     ArrayList<LocationDistance> listNearbyplaces;
     ArrayList<LocationDistance> listLocationDistance;
@@ -53,9 +55,10 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     protected String doInBackground(Object... objects){
         mMap = (GoogleMap)objects[0];
         url = (String)objects[1];
-        TypeWish=(String) objects[2];
+        typeWish=(String) objects[2];
         currentLat = (double) objects[3];
         currentLng = (double) objects [4];
+        doctorType =(String) objects[5];
 
 
         DownloadURL downloadURL = new DownloadURL();
@@ -84,19 +87,22 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //we need a list where we will store our locations that we injected
-                ArrayList<LocationInformations> locationInformationsList = new ArrayList<>();
 
+                ArrayList<LocationInformations> locationInformationsList = new ArrayList<>();
                 ArrayList<Location> typeList=new ArrayList<>();
+                ArrayList<LocationDoctorType> typeDoctorList=new ArrayList<>();
+
+
 
                 for(DataSnapshot innerData : dataSnapshot.getChildren())
                 {   String lat,lng, placeName,source, vicinity;
                     String id = mRef.getKey();
-                    String type;
+                    String type,docType;
                     Log.e("keys-----", innerData.getKey());
 
                     // initialise our LocationInformation that we will add to our list if it's stored only in firebase
 
-                    LocationInformations Linfo = new LocationInformations(innerData.getKey(),"","","","","","");
+                    LocationInformations Linfo = new LocationInformations(innerData.getKey(),"","","","","","","");
 
 
                     for ( DataSnapshot innerInnerData : innerData.getChildren()) {
@@ -107,16 +113,26 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
                         switch (key)
                         {
+                            case "doctorType" :{
+                                docType = innerInnerData.getValue(String.class);
+                                Linfo.setDoctorType(docType);
+                                LocationDoctorType lD = new LocationDoctorType(innerData.getKey(),docType);
+                                typeDoctorList.add(lD);
+                                break;
+
+                            }
                             case "type" :
 
                                 type = innerInnerData.getValue(String.class);
                                 Location L  = new Location(innerData.getKey(),type);
                                 typeList.add(L);
                                 Linfo.setType(type);
+                                break;
                         }
                         if(key.equals("latitude")){
                             lat = innerInnerData.getValue(String.class);
                             Linfo.setLatitude(lat);
+
                         }
                         if(key.equals("longitude")){
                             lng = innerInnerData.getValue(String.class);
@@ -134,6 +150,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                             source=innerInnerData.getValue(String.class);
                             Linfo.setSource(source);
                         }
+
+
                     }
                     // If that location is injected then add to our list
                     if(Linfo.getSource().equals("injected")){
@@ -148,7 +166,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 }
                 Log.d("typeList",typeList.toString());
                 Log.d("locationInformations",locationInformationsList.toString());
-                showNearbyPlaces(nearbyPlaces2,typeList,locationInformationsList);
+                showNearbyPlaces(nearbyPlaces2,typeList,typeDoctorList,locationInformationsList);
 
             }
 
@@ -165,10 +183,9 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         super();
     }
 
-    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations,ArrayList<LocationInformations> locationInformationsList)
-    {
+    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList , ArrayList<Location> Locations,ArrayList<LocationDoctorType> typeDoctorList,ArrayList<LocationInformations> locationInformationsList) {
 
-        for(int i = 0; i < nearbyPlaceList.size(); i++) {
+        for (int i = 0; i < nearbyPlaceList.size(); i++) {
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlaceList.get(i);
 
@@ -185,25 +202,15 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             // Firebase information about the place
 
-            for (int j = 0; j < Locations.size(); j++) {
-
-
-                Log.d("pleaseEmchiListLoca", Locations.get(j).getType());
-                Log.d("pleaseEmchiListLoca", Locations.get(j).getID());
-
-                Log.d("position", "112");
-            }
-
             //adding locations to Firebase
 
             String keyLocation = googlePlace.get("place_id");
-            Log.d("pathKey", keyLocation);
-            final String typeofplace = googlePlace.get("type_of_place");
-            Log.d("typeofplace2", typeofplace + "faregh");
-
 
             key = mRef.child(keyLocation);
             typeOfPlace = getType(Locations, keyLocation);
+            docWish = getDoctorType(typeDoctorList,keyLocation);
+
+            //normally we store here our data
 
             if (typeOfPlace == null) {
 
@@ -213,70 +220,39 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 key.child("longitude").setValue(lng);
                 key.child("type").setValue("Hospital");
                 key.child("source").setValue("Google");
+                key.child("doctorType").setValue("notype");
 
             }
 
+            //end of storing
 
-            //normally we store here our data
 
-
-            Log.d("typeofplace", TypeWish);
+            Log.d("typeofplace", typeWish);
             Log.d("typeofplace2", typeOfPlace + "faregh");
 
 
-            if (TypeWish.equals(typeOfPlace)) {
+            if (typeWish.equals(typeOfPlace)&& doctorType.equals(docWish)) {
                 //get distance between two points
                 float results[] = new float[10];
                 android.location.Location.distanceBetween(currentLat, currentLng, lat, lng, results);
-                float distance = results[0]/1000;
+                float distance = results[0] / 1000;
 
                 LocationDistance locationDistance = new LocationDistance(lat, lng, distance, placeName, vicinity);
+                locationDistance.setPlaceID(keyLocation);
                 listNearbyplaces.add(locationDistance);
             }
 
         }
-                /* mMap.addMarker(markerOptions);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        for (int j = 0; j < Locations.size(); j++) {
 
 
+            Log.d("pleaseEmchiListDoctor", Locations.get(j).getType());
+            Log.d("pleaseEmchiListDoctor", Locations.get(j).getID());
+        }
 
-                Object dataTransfer[] = new Object[3];
-                String urlDirection = getDirectionsUrl(currentLat,currentLng,lat,lng);
-                dataTransfer[0] =mMap;
-                dataTransfer[1]= urlDirection;
-                dataTransfer[2] = new LatLng(lat,lng);
-                GetDirectionsData getDirectionsData = new GetDirectionsData(new GetDirectionsData.AsyncResponse() {
-                    @Override
-                    public void processFinish(HashMap<String, String> directionsList) {
-                        durationAndDistance = directionsList;
-                        if(directionsList.isEmpty()){
-                            Log.e("empty", "processFinish: empty " );
-                        }
-                        else{
-                            Log.e("not empty", "processFinish: not empty ");
-                        }
-                        Log.e("duration and distance", "processFinish: "+directionsList.get("distance"));
+        for (int k = 0; k < locationInformationsList.size(); k++) {
 
-                        //it didn't work
-                    }
-                });
-                getDirectionsData.execute(dataTransfer);
-
-                  if(durationAndDistance.isEmpty()){
-
-                      Log.e("durationAndDistance", "empty :(" );
-
-
-                  }
-                  else
-                  {
-                      Log.e("durationAndDistance", "duration and distance not empty :D " );
-                  }*/
-
-        for(int k=0;k<locationInformationsList.size();k++) {
-
-            if (TypeWish.equals(getType(Locations, locationInformationsList.get(k).getKey()))) {
+            if (typeWish.equals(locationInformationsList.get(k).getType())&& doctorType.equals(locationInformationsList.get(k).getDoctorType())) {
 
 
                 double latitude = Double.parseDouble(locationInformationsList.get(k).getLatitude());
@@ -290,8 +266,11 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 android.location.Location.distanceBetween(currentLat, currentLng, latitude, longitude, results);
                 float distance = results[0] / 1000;
                 if (distance < 40) {
+
                     LocationDistance locationDistance = new LocationDistance(latitude, longitude, distance, placeName, vicinity);
+                    locationDistance.setPlaceID(locationInformationsList.get(k).getKey());
                     listNearbyplaces.add(locationDistance);
+
                 }
 
             }
@@ -304,22 +283,14 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 return Float.valueOf((ld1.getDistance())).compareTo(Float.valueOf(ld2.getDistance()));
             }
         });
-            //TEST
-        for (LocationDistance d: listNearbyplaces) {
-            Log.e("sorted? ", ""+d.getDistance()+" "+d.getPlaceName() );
+        //TEST
+        for (LocationDistance d : listNearbyplaces) {
+            Log.e("sorted? ", "" + d.getDistance() + " " + d.getPlaceName());
             //sorted correctly here
 
         }
-           //calculate distance of first 15 locations
-               caculateDistance(listNearbyplaces);
-               /* MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(placeName + " : "+ vicinity);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                mMap.addMarker(markerOptions);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(10));*/
-
+        //calculate distance of first 15 locations
+        caculateDistance(listNearbyplaces);
     }
 
 
@@ -341,7 +312,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin="+currentLat+","+currentLng);
         googleDirectionsUrl.append("&destination="+latLocation+","+lngLocation);
-        googleDirectionsUrl.append("&key="+"AIzaSyB68rL3FyWgpVIPpVCc0h_wIOIsUXayBRQ");
+        googleDirectionsUrl.append("&key="+"AIzaSyApW_8nbxrgJcT6Zp_wwTUny2eR47AHFAM");
 
         Log.e("ulrofDirection",googleDirectionsUrl.toString() );
 
@@ -349,10 +320,10 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
 
     }
-    
+
     public void caculateDistance(ArrayList<LocationDistance> list){
-           int i =0;
-           n = list.size();
+        int i =0;
+        n = list.size();
         for (final LocationDistance locationDistance : list) {
             if(i<15){
                 //request Distance
@@ -379,41 +350,41 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 });
                 getDirectionsData.execute(dataTransfer);
 
-              i = i+1;
+                i = i+1;
             }
             else{
                 break;
             }
         }
-        
+
     }
 
-     public void addToList(LocationDistance l,int n){
-         LocationDistance nearestLocation;
-         Log.e("location added", "addToList: "+l.getDistance()+" "+l.getPlaceName() );
-         listLocationDistance.add(l);
-         if((listLocationDistance.size()==15)|| (listLocationDistance.size()==n)){
-             // sort my list and get the nearest location and then call a methode to display all my locations
-             Collections.sort(listLocationDistance, new Comparator<LocationDistance>() {
-                 @Override
-                 public int compare(LocationDistance d1, LocationDistance d2) {
-                     return Float.valueOf(d1.getDistance()).compareTo(Float.valueOf(d2.getDistance()));
-                 }
-             });
-             //TEST
-             for (LocationDistance m : listLocationDistance) {
+    public void addToList(LocationDistance l,int n){
+        LocationDistance nearestLocation;
+        Log.e("location added", "addToList: "+l.getDistance()+" "+l.getPlaceName() );
+        listLocationDistance.add(l);
+        if((listLocationDistance.size()==15)|| (listLocationDistance.size()==n)){
+            // sort my list and get the nearest location and then call a methode to display all my locations
+            Collections.sort(listLocationDistance, new Comparator<LocationDistance>() {
+                @Override
+                public int compare(LocationDistance d1, LocationDistance d2) {
+                    return Float.valueOf(d1.getDistance()).compareTo(Float.valueOf(d2.getDistance()));
+                }
+            });
+            //TEST
+            for (LocationDistance m : listLocationDistance) {
 
-                 Log.e("SORTED REAL DISTANCE", "SORTED REAL DISTANCE"+m.getDistance()+" "+m.getPlaceName() );
-             }
+                Log.e("SORTED REAL DISTANCE", "SORTED REAL DISTANCE"+m.getDistance()+" "+m.getPlaceName() );
+            }
 
-             nearestLocation = listLocationDistance.get(0);
-             displayLocations(listNearbyplaces,nearestLocation);
+            nearestLocation = listLocationDistance.get(0);
+            displayLocations(listNearbyplaces,nearestLocation);
 
 
 
-         }
+        }
 
-     }
+    }
     public void displayDirection(String[] directionsList)
     {
 
@@ -422,7 +393,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         for(int i = 0;i<count;i++)
         {
             PolylineOptions options = new PolylineOptions();
-            options.color(Color.RED);
+            options.color(Color.rgb(102, 179, 255));
             options.width(10);
             Log.d("m3amarplz",directionsList[i]);
             options.addAll(PolyUtil.decode(directionsList[i]));
@@ -431,35 +402,58 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         }
     }
 
-     public void displayLocations( ArrayList<LocationDistance> listPlaces, LocationDistance nearestLocation){
+    public void displayLocations( ArrayList<LocationDistance> listPlaces, LocationDistance nearestLocation){
 
-         if( listLocationDistance.isEmpty()){
-             Log.e("mysortedlistisEMPTY D:", "SORTED EMPTY D: " );
-         }
-         else{
-             Log.e("SORTED LIST", "NOT EMPTY :D" );
-         }
+        if( listLocationDistance.isEmpty()){
+            Log.e("mysortedlistisEMPTY D:", "SORTED EMPTY D: " );
+        }
+        else{
+            Log.e("SORTED LIST", "NOT EMPTY :D" );
+        }
 
 
 
-         for (LocationDistance l : listPlaces) {
-             String placeName = l.getPlaceName();
-             String vicinity = l.getVicinity();
-             double lat = l.getLatitude();
-             double lng = l.getLongitude();
-             LatLng latLng = new LatLng(lat,lng);
+        for (LocationDistance l : listPlaces) {
+            String placeName = l.getPlaceName();
+            String vicinity = l.getVicinity();
+            double lat = l.getLatitude();
+            double lng = l.getLongitude();
+            LatLng latLng = new LatLng(lat,lng);
 
-             MarkerOptions markerOptions = new MarkerOptions();
-             markerOptions.position(latLng);
-             markerOptions.title(placeName + " : "+ vicinity);
-             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-             mMap.addMarker(markerOptions);
-             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-             mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
-         }
-         displayDirection(nearestLocation.getPath());
-         Log.e("nearestLocation", "displayLocations: "+nearestLocation.getPlaceName()+nearestLocation.getDistance() );
-     }
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+
+
+            markerOptions.title(placeName + " : "+ vicinity);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).alpha(0.7f);
+            mMap.addMarker(markerOptions).setTag(l);
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
+        }
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(new LatLng(currentLat,currentLng));
+        markerOptions.title("Your position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).alpha(0.7f);
+        mMap.addMarker(markerOptions);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng( new LatLng(nearestLocation.getLatitude(),nearestLocation.getLongitude())));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15f));
+        displayDirection(nearestLocation.getPath());
+    }
+    private  String getDoctorType(ArrayList<LocationDoctorType> listOfDoctorTypes,String key){
+
+        for (int i = 0; i<listOfDoctorTypes.size();i++){
+
+            if (key.equals(listOfDoctorTypes.get(i).getKeyLoc())){
+
+                return listOfDoctorTypes.get(i).getTypeLLoc();
+            }
+        }
+
+        return null;
+    }
 
 }

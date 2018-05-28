@@ -12,9 +12,44 @@ public class LocationInformations {
     private String type;
     private String source;
     private String vicinity;
+    private String Justification;
 
 
-    public LocationInformations(String key,String latitude, String longitude,String placeName,String type, String source,String vicinity) {
+    public String getJustification() {
+        return Justification;
+    }
+
+    public void setJustification(String justification) {
+        Justification = justification;
+    }
+
+    public String getRequestID() {
+        return RequestID;
+    }
+
+    public void setRequestID(String requestID) {
+        RequestID = requestID;
+    }
+
+    private String Sender,doctorType,RequestID;
+    //this Sender Variable is used Only in the AdminPanel when this object is a Request
+    public String getSender() {
+        return Sender;
+    }
+
+    public void setSender(String sender) {
+        Sender = sender;
+    }
+
+    public String getDoctorType() {
+        return doctorType;
+    }
+
+    public void setDoctorType(String doctorType) {
+        this.doctorType = doctorType;
+    }
+
+    public LocationInformations(String key, String latitude, String longitude, String placeName, String type, String source, String vicinity, String doctorType) {
 
         this.key = key;
         this.latitude = latitude;
@@ -23,6 +58,9 @@ public class LocationInformations {
         this.type = type;
         this.source = source;
         this.vicinity = vicinity;
+        this.doctorType=doctorType;
+
+
     }
 
     public String getKey() {

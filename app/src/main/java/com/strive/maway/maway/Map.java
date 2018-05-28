@@ -1,7 +1,6 @@
 package com.strive.maway.maway;
 
 
-import android.*;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
@@ -9,6 +8,9 @@ import android.location.Location;
 
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -19,7 +21,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -36,7 +40,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -44,13 +51,17 @@ import com.google.android.gms.tasks.Task;
 
 /* A simple {@link Fragment} subclass.
  */
-public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
+public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener{
     GoogleMap mGoogleMap;
     MapView mMapView;
     private GoogleApiClient client;
     View mView;
-    LinearLayout hospital;
-    LinearLayout doctor;
+    LinearLayout hospital,doctor,listDoctorsType,goDown;
+    TextView dermatologist,doctorText,hospitalText;
+    ImageView doctorpicture,hospitalpicture;
+    private Marker marker;
+    Object dataTransfer[] = new Object[6];
+    GetNearbyPlacesData getNearbyPlacesData;
 
     private LocationRequest mLocationRequest;
     private long UPDATE_INTERVAL = 60* 1000 *5;  /*  5 d9aye9  */
@@ -68,6 +79,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     LocationCallback locationCallback;
     int PROXIMITY_RADIUS = 20000;
     double latitude,longitude;
+    double locationLatitude,locationLongitude;
 
 
 
@@ -132,8 +144,10 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
         isServicesOK();
+
         mMapView = (MapView) mView.findViewById(R.id.map);
         getLocationPermission();
 
@@ -141,16 +155,38 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
             mMapView.onCreate(null);
             mMapView.onResume();
             mMapView.getMapAsync(this);
-
-
         }
+        goDown.setOnClickListener(new View.OnClickListener() {
+            @Override
 
+            public void onClick(View v) {
+                listDoctorsType.setVisibility(View.GONE);
+                doctorText.setTextColor(getResources().getColor(R.color.greyTextHospital));
+                doctorpicture.setImageResource(R.drawable.docteurpng);
+                doctor.setBackgroundResource(R.drawable.transparentshape);
 
+            }
+        });
 
         hospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Object dataTransfer[] = new Object[5];
+                if(!isConnected()){
+                    Toast.makeText(getActivity().getApplicationContext(), "No Connection ", Toast.LENGTH_SHORT).show();
+
+                }else{
+
+                listDoctorsType.setVisibility(View.GONE);
+                doctorText.setTextColor(getResources().getColor(R.color.greyTextHospital));
+                doctorpicture.setImageResource(R.drawable.docteurpng);
+                doctor.setBackgroundResource(R.drawable.transparentshape);
+
+                hospitalText.setTextColor(getResources().getColor(R.color.White));
+                hospitalpicture.setImageResource(R.drawable.hospital_white);
+                hospital.setBackgroundResource(R.drawable.blue_transparent_shape);
+
+
+                Object dataTransfer[] = new Object[6];
                 GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
                 Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
                 mGoogleMap.clear();
@@ -161,23 +197,31 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                 dataTransfer[2]="Hospital";
                 dataTransfer[3]=latitude;
                 dataTransfer[4]=longitude;
-
-
-
+                dataTransfer[5]="notype";
                 getNearbyPlacesData.execute(dataTransfer);
                 Toast.makeText(getContext(), "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
-            }
+            }}
         });
         doctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Doctor clicked", Toast.LENGTH_SHORT).show();
+                if(!isConnected()){
+                    Toast.makeText(getActivity().getApplicationContext(), "No Connection ", Toast.LENGTH_SHORT).show();
 
-                Object dataTransfer[] = new Object[5];
+                }else{
 
-                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+                    Toast.makeText(getContext(), "Doctor clicked", Toast.LENGTH_SHORT).show();
 
-                mGoogleMap.clear();
+                doctorText.setTextColor(getResources().getColor(R.color.White));
+                doctorpicture.setImageResource(R.drawable.doctor_white);
+                doctor.setBackgroundResource(R.drawable.blue_transparent_left);
+
+                hospitalText.setTextColor(getResources().getColor(R.color.greyTextHospital));
+                hospitalpicture.setImageResource(R.drawable.hospitalicon);
+                hospital.setBackgroundResource(R.drawable.transparentshape);
+
+                getNearbyPlacesData = new GetNearbyPlacesData();
+
                 String hospital = "hospital";
                 String url = getUrl(latitude, longitude, hospital);
 
@@ -187,9 +231,23 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                 dataTransfer[3]=latitude;
                 dataTransfer[4]=longitude;
 
-                getNearbyPlacesData.execute(dataTransfer);
+                listDoctorsType.setVisibility(View.VISIBLE);
 
-            }
+                dermatologist.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mGoogleMap.clear();
+                        dataTransfer[5]="Dermatologist";
+                        listDoctorsType.setVisibility(View.GONE);
+                        getNearbyPlacesData.execute(dataTransfer);
+
+                    }
+                });
+
+
+
+
+            }}
         });
     }
 
@@ -204,9 +262,25 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         googlePlaceUrl.append("&sensor=true");
         googlePlaceUrl.append("&key="+"AIzaSyD0_7Gef4EHp5_yD4hssK_wryzUe0Zie-A");
 
-        Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
-
         return googlePlaceUrl.toString();
+    }
+    //test Connection
+    private boolean isConnected(){
+        ConnectivityManager connectivityManager = (ConnectivityManager)getActivity()
+                .getSystemService(getActivity().getApplicationContext()
+                        .CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()== NetworkInfo.State.CONNECTED){
+
+
+
+
+
+            return true;
+        }
+
+
+        return false;
     }
 
 
@@ -215,8 +289,16 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
+        listDoctorsType = mView.findViewById(R.id.doctorMenu);
+        dermatologist = mView.findViewById(R.id.dermatho);
         hospital = mView.findViewById(R.id.hospitalclick);
         doctor = mView.findViewById(R.id.doctorclick);
+        doctorpicture = mView.findViewById(R.id.doctorIcon);
+        hospitalpicture = mView.findViewById(R.id.hospitalIcon);
+        doctorText = mView.findViewById(R.id.doctorText);
+        hospitalText = mView.findViewById(R.id.hospitalText);
+        goDown = mView.findViewById(R.id.scrollDown);
+
         return mView;
     }
 
@@ -228,8 +310,6 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         MapsInitializer.initialize(getActivity().getApplicationContext());
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-
 
         // hna ndirou centralisation nta3 Current location of the phone
         buildGoogleApiClient();
@@ -246,6 +326,19 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
         mGoogleMap.setMyLocationEnabled(true);
 
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                locationLatitude = marker.getPosition().latitude;
+                locationLongitude = marker.getPosition().longitude;
+                LocationDistance l =(LocationDistance) marker.getTag();
+
+
+                openDialog(l);
+            }
+        });
+
     }
 
 
@@ -253,6 +346,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     //Method From Github to check if the user has the right Version of the services
 
     public boolean isServicesOK(){
+
         Log.d(TAG, "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
@@ -279,14 +373,19 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
             Toast.makeText(getActivity().getApplicationContext(),"Eror mapNull", Toast.LENGTH_SHORT).show();
 
-        }else {        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        }else {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).alpha(0.7f);
+            mGoogleMap.addMarker(markerOptions);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         }
     }
 
     //la methode pour la position actuel
 
     private void getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity().getApplicationContext());
 
@@ -341,7 +440,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
         // new Google API SDK v11 uses getFusedLocationProviderClient(this)
         if((ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
-            &&(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED))
+                &&(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED))
         {
             LocationServices.getFusedLocationProviderClient(getContext()).requestLocationUpdates(mLocationRequest,createLocationCallBack() ,
                     Looper.myLooper());
@@ -349,21 +448,21 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
     }
     private LocationCallback createLocationCallBack(){
 
-      locationCallback=  new LocationCallback() {
-          @Override
-          public void onLocationResult(LocationResult locationResult) {
-              // do work here
-              onLocationChanged(locationResult.getLastLocation());
-          }
-      };
-      return locationCallback;
+        locationCallback=  new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                // do work here
+                onLocationChanged(locationResult.getLastLocation());
+            }
+        };
+        return locationCallback;
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
 
-        // New location has now been determined
+
         // New location has now been determined
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
@@ -374,7 +473,9 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
         latitude=location.getLatitude();
         longitude = location.getLongitude();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+
     }
 
     @Override
@@ -393,7 +494,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-       client.connect();
+        client.connect();
     }
 
     @Override
@@ -419,4 +520,20 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
             mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
         }
     }
+
+    public void openDialog(LocationDistance l){
+
+        Bundle args = new Bundle();
+        args.putDouble("latitude",locationLatitude);
+        args.putDouble("longitude",locationLongitude);
+        args.putString("placename",l.getPlaceName());
+        args.putString("vicinity",l.getVicinity());
+        args.putString("placeID",l.getPlaceID());
+
+        RequestDeleteDialog requestDeleteDialog= new RequestDeleteDialog();
+        requestDeleteDialog.setArguments(args);
+        requestDeleteDialog.show(getActivity().getSupportFragmentManager(),"RequestDeleteDialog");
+    }
+
+
 }

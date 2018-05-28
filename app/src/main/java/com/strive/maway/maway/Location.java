@@ -9,6 +9,7 @@ public class Location {
    private String ID;
    private String Type;
 
+
     public String getID() {
         return ID;
     }

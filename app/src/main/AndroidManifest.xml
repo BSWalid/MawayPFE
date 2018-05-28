@@ -35,7 +35,7 @@
         </activity>
         <activity
             android:name=".SignUp"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -45,7 +45,7 @@
             android:name=".Home"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -62,7 +62,10 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".Admin.AdminPael"
+            android:label="@string/title_activity_admin_pael"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

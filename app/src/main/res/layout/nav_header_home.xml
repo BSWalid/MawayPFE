@@ -13,7 +13,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.5"></LinearLayout>
+        android:layout_weight="1.5"
+
+        android:gravity="center">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/AdminBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            
+            
+           > <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_admin"/></LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

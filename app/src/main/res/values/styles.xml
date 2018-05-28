@@ -3,13 +3,35 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/blueShadow</item>
         <item name="colorPrimaryDark">@color/Header</item>
         <item name="colorAccent">@color/begeBtn</item>
+        <!--item name="elevation">0dp</item-->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="transparentStyle" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="actionbar">
+        <item name="colorPrimary">@color/transparent</item>
+        <item name="colorPrimaryDark">@color/White</item>
+        <item name="colorAccent">@color/White</item>
+    </style>
+
+
+    <style name="MyTabTextAppearance" parent="Base.Widget.Design.TabLayout">
+
+        <item name="android:textSize">@dimen/design_tab_text_size_2line</item>
+
+        <item name="android:fontFamily">@font/raleway_bold</item>
+
+
+
+
+        <item name="textAllCaps">true</item>
+    </style>
+
 
 </resources>

@@ -106,30 +106,8 @@
             android:layout_weight="1.8"
             android:weightSum="2"
             android:orientation="horizontal">
-            <Button
-                android:id="@+id/addLocation_cancel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:text="CANCEL"
-                android:textAlignment="center"
-                android:textColor="#555"
-                android:textSize="17sp"
-                android:fontFamily="@font/raleway_bold"
-                />
-            <Button
-                android:id="@+id/addLocation_requestAdd"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:text="SEND REQUEST"
-                android:textAlignment="center"
-                android:textColor="#555"
-                android:textSize="17sp"
-                android:fontFamily="@font/raleway_bold"
-                />
+
+
         </LinearLayout>
 
 

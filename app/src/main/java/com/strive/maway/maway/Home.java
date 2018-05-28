@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.strive.maway.maway.AccountSettings.UserSettings;
+import com.strive.maway.maway.Admin.AdminPael;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -41,6 +43,7 @@ public class Home extends AppCompatActivity
     String username,password,email;
     TextView Logout;
     GoogleMap mMap;
+    LinearLayout adminButton;
   /*  private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -108,6 +111,24 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         name =(TextView) navigationView.getHeaderView(0).findViewById(R.id.nameS);
+        adminButton = (LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.AdminBtn);
+        if(email.equals("walid@walid.com")){
+            adminButton.setVisibility(View.VISIBLE);
+            adminButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(),AdminPael.class);
+                    startActivity(i);
+
+
+                }
+            });
+
+
+        }
+
+
+
 
         if(getIntent().getExtras().getString("username")==null&& name==null){
 
@@ -137,7 +158,9 @@ public class Home extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.home, menu);
         getMenuInflater().inflate(R.menu.menu2, menu);
+
         return true;
     }
 
