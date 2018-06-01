@@ -56,26 +56,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         mAuth = FirebaseAuth.getInstance();
         findViewById(R.id.btnsignup).setOnClickListener(this);
 
-
-       /* btnsignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String emailText = email.getText().toString();
-                String passwordText = password.getText().toString();
-                String usernameText = username.getText().toString();
-                 Firebase key = mRef.push();
-                 key.child("email").setValue(emailText);
-                 key.child("password").setValue(passwordText);
-                 key.child("username").setValue(usernameText);
-            }
-        }); */
-
-
-
-
-
-
-
     }
  private void registerUser(){
 
@@ -114,7 +94,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
          return; //it stops the execution
      }
      //set progressbar visible
-      //progressBar.setVisibility(View.VISIBLE);
+      progressBar.setVisibility(View.VISIBLE);
      //the complete Listener detects the completion, it will take a complete listener interface object
      mAuth.createUserWithEmailAndPassword(emailText,passwordText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
          @Override

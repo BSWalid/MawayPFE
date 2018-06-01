@@ -45,7 +45,7 @@ public class AdminDeleteLocationDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.admin_delete_dialog,null); //3awed dir synchronize
-        builder.setView(view).setTitle("DELETE LOCATION")
+        builder.setView(view)
                 .setNegativeButton("REFUSE", new DialogInterface.OnClickListener() {
                     //here u delete it from there
                     @Override

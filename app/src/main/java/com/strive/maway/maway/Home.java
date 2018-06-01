@@ -1,9 +1,8 @@
 package com.strive.maway.maway;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -15,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,39 +24,28 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.strive.maway.maway.AccountSettings.UserSettings;
 import com.strive.maway.maway.Admin.AdminPael;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
-   /* @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onMapReady :Map is ready here ");
-       */
 
 
     TextView  name ;
-    FirebaseAuth mAuth;
     Firebase mRef;
     String username,password,email;
-    TextView Logout;
-    GoogleMap mMap;
+    LinearLayout Logout;
     LinearLayout adminButton;
-  /*  private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
-    private static String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final String TAG = "Home";
-    private Boolean mLocationPermissionGranted = false;
-*/
+    LinearLayout appbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        Window w = getWindow();
+        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         password = getIntent().getExtras().getString("password");
         email = getIntent().getExtras().getString("email");
 
@@ -65,7 +55,7 @@ public class Home extends AppCompatActivity
         mRef = new Firebase("https://maway-1520842395181.firebaseio.com/");
 
 
-        Logout =  (TextView) findViewById(R.id.logout);
+        Logout = findViewById(R.id.logout);
 
 
         Logout.setOnClickListener(new View.OnClickListener() {
@@ -89,18 +79,11 @@ public class Home extends AppCompatActivity
 
 
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        appbar= findViewById(R.id.app_bar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -109,6 +92,7 @@ public class Home extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(this);
         name =(TextView) navigationView.getHeaderView(0).findViewById(R.id.nameS);
         adminButton = (LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.AdminBtn);
@@ -140,8 +124,27 @@ public class Home extends AppCompatActivity
 
             name.setText("Welcome "+getIntent().getExtras().getString("username"));
         }
+        themeTextColorChange(navigationView,getResources().getColor(R.color.White),getResources().getColor(R.color.greyTextHospital));
+
+        navigationView.setItemBackgroundResource(R.drawable.text_state);
+
 
     }
+    public void themeTextColorChange(NavigationView navigationView,int colWhite,int colDark){
+
+        int state[][] = new int[][]{
+                new int[]{android.R.attr.state_checked},  //checked
+                new int[] {-android.R.attr.state_checked}, // unchecked
+        };
+        int[] color =  new int[]{
+                colWhite,colDark
+        };
+        ColorStateList colorStateList = new ColorStateList(state,color);
+        navigationView.setItemTextColor(colorStateList);
+        navigationView.setItemIconTintList(colorStateList);
+
+    }
+
 
 
     @Override
@@ -157,7 +160,6 @@ public class Home extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
         getMenuInflater().inflate(R.menu.home, menu);
         getMenuInflater().inflate(R.menu.menu2, menu);
 
@@ -177,7 +179,6 @@ public class Home extends AppCompatActivity
         }
 
 
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -189,32 +190,31 @@ public class Home extends AppCompatActivity
         item.setChecked(true);
 
         if (id == R.id.nav_addlocation) {
-            // Handle the camera action
+
             addLocationRequest mainFragment = new addLocationRequest();
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
 
+            appbar.setVisibility(View.VISIBLE);
             ft.replace(R.id.content,mainFragment, "main").commit();
 
-
-
-
-        } else if (id == R.id.nav_reportlocation) {
-
-        } else if (id == R.id.nav_settings) {
-            Toast.makeText(this, "SettingsClicked", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.nav_settings) {
             Bundle bundle = new Bundle();
             bundle.putString("email", email);
             bundle.putString("password",password);
             UserSettings userSettingFragment = new UserSettings();
             userSettingFragment.setArguments(bundle);
             FragmentManager fragmentManager = getSupportFragmentManager();
+            appbar.setVisibility(View.GONE);
             fragmentManager.beginTransaction().replace(R.id.content, userSettingFragment).commit();
 
 
-        }else if (id == R.id.nav_home) {
+        }
+        else if (id == R.id.nav_home) {
             Map mainFragment = new Map();
             FragmentManager fragmentManager = getSupportFragmentManager();
+            appbar.setVisibility(View.VISIBLE);
             fragmentManager.beginTransaction().replace(R.id.content, mainFragment).commit();
 
         }
@@ -245,7 +245,11 @@ public class Home extends AppCompatActivity
                         case "username":
                             //code here
                             username = innerData.getValue(String.class);
+                            if(name!=null && username==null) {
+                                name.setText("Welcome back");
+                            }
                             if(name == null){}else{name.setText("Welcome "+username);}
+
 
 
 
@@ -257,7 +261,6 @@ public class Home extends AppCompatActivity
                 }
                     }
 
-                //name.setText("Welcome "+username);
 
             }
 

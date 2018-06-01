@@ -8,7 +8,7 @@
         android:orientation="vertical"
         android:weightSum="5.5"
 
-        android:layout_height="120dp"
+        android:layout_height="170dp"
         xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:background="@color/White"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="17sp"
                 android:textColor="@color/icons"
-                android:text="Example"
+                android:text="Victor Hugo"
 
                 android:fontFamily="@font/raleway_bold"/>
         </LinearLayout>
@@ -60,7 +60,7 @@
                 android:layout_weight="3.8"
                 android:textColor="@color/normal"
                 android:id="@+id/vicinity"
-                android:text="vicinity: oinnvpzddpzfzkfknfpojefpzef"
+                android:text="vicinity: ciy 206 village victor hugo"
                 android:fontFamily="@font/raleway_semibold"/>
         </LinearLayout>
         <LinearLayout

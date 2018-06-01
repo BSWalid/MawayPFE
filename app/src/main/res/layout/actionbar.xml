@@ -9,6 +9,7 @@
         android:layout_height="40dp"
         android:id="@+id/toolbar"
         android:theme="@style/actionbar"
+        android:elevation="0dp"
         android:background="@drawable/actionbar"></android.support.v7.widget.Toolbar>
     <!-- android:elevation="0dp"-->
 

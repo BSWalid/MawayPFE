@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#a4a6af</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="transparent">#00ffffff</color>
@@ -8,18 +8,21 @@
     <color name="bluBtn">#70e9ff</color>
     <color name="White">#fff</color>
     <color name="begeBtn">#bdf2e3a7</color>
+    <color name="bege">#c0e18f</color>
     <color name="blueShadow">#A8F9FF</color>
     <color name="Header">#717171</color>
     <color name="normal">#8D8D8D</color>
     <color name="icons">#555555</color>
     <color name="BorderColor">#c6c6c6</color>
-    <color name="Title">#56E1E8</color>
+    <color name="Title">#8956e1e8</color>
     <color name="almost_transparent">#bcffffff</color>
     <color name="blue_transparent">#6f70e9ff</color>
     <color name="blue_search">#7dc2f2ff</color>
     <color name="clickblue">#7dc2f2ff</color>
     <color name="greyTextHospital">#787878</color>
     <color name="TabLaoytHeader">#6BF0F7</color>
+    <color name="snackbar">#3ddbef</color>
+    <color name="darkTransparent">#2f000000</color>
 
 
 

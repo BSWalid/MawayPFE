@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="8"
+    android:weightSum="9"
 
     android:background="@color/White"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"></LinearLayout>
+            android:layout_weight="0.4"></LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -44,14 +44,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.01"
-        android:background="@color/colorPrimaryDark"></LinearLayout>
+        android:layout_weight="0.02"
+        android:background="#ddd"></LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/EditAccount"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:orientation="horizontal"
         android:weightSum="5.5">
 
@@ -59,33 +63,48 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-           ></LinearLayout>
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_account_icon"></LinearLayout>
+
+
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:orientation="vertical"
-            android:weightSum="1"
-            >
+            android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.98"
+                android:layout_weight="0.99"
                 android:gravity="center_vertical|left">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_bold"
                     android:text="Edit Account"
-                    android:textSize="17sp"
-                    android:fontFamily="@font/raleway_bold"/>
+                    android:textSize="16.9sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.02"
-                android:background="@color/colorPrimaryDark"></LinearLayout>
+                android:background="#ddd"></LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -94,7 +113,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
+        android:id="@+id/delete_accountBtn"
         android:orientation="horizontal"
         android:weightSum="5.5">
 
@@ -102,7 +122,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ></LinearLayout>
+            android:gravity="center"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:background="@drawable/delete_account_icon"></LinearLayout>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -114,20 +141,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.98"
+                android:layout_weight="0.99"
                 android:gravity="center_vertical|left">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Delete Account "
-                    android:textSize="17sp"
+                    android:textSize="16.9sp"
                     android:fontFamily="@font/raleway_bold"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.02"
-                android:background="@color/colorPrimaryDark"></LinearLayout>
+                android:background="#ddd"></LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
