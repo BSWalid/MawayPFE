@@ -17,19 +17,7 @@
 
         android:gravity="center_vertical|right"
         android:layout_marginRight="10dp" >
-        <LinearLayout
-            android:orientation="horizontal"
-            android:id="@+id/AdminBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:visibility="gone"
-            
-            
-           > <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/ic_admin"
-            android:layout_gravity="right"/></LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -71,14 +59,14 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/nameS"
+            android:id="@+id/nameSkip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_semibold"
-            android:text="Welcome Emma"
+            android:text="Welcome to Maway"
             android:textColor="@color/Header"
             android:textSize="20sp" />
- </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -135,9 +123,4 @@
             android:layout_weight="0.3"
             ></LinearLayout>
     </LinearLayout>
-
-
-
-
-
 </LinearLayout>

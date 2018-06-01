@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"></LinearLayout>
+            android:layout_weight="0.4"></LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -44,8 +44,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.01"
-        android:background="@color/colorPrimaryDark"></LinearLayout>
+        android:layout_weight="0.02"
+        android:background="#ddd"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,6 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:textSize="14.166sp"
 
                     android:text="Please enter your current password
 to be able to edit your account :"
@@ -134,7 +135,7 @@ to be able to edit your account :"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.02"
-        android:background="@color/colorPrimaryDark"
+        android:background="#ddd"
         ></LinearLayout>
 
     <LinearLayout
@@ -187,13 +188,9 @@ to be able to edit your account :"
                         android:background="#0000"
                         android:backgroundTint="#555"
                         android:inputType="textPersonName"
-
-
                         android:drawableLeft="@drawable/usernamegrey"
                         android:drawablePadding="10dp"
                         android:hint="Username"
-
-
                         android:maxLength="8"
                         android:singleLine="false"
                         android:textColorHint="#555"
@@ -257,13 +254,9 @@ to be able to edit your account :"
                         android:background="#0000"
                         android:backgroundTint="#555"
                         android:inputType="textEmailAddress"
-
-
                         android:drawableLeft="@drawable/emailgrey"
                         android:drawablePadding="10dp"
                         android:hint="Hildweig@gmail.com"
-
-
                         android:singleLine="false"
                         android:textColorHint="#555"
                         android:textStyle="bold"
@@ -398,7 +391,7 @@ to be able to edit your account :"
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"></LinearLayout>
+            android:layout_weight="1.2"></LinearLayout>
 
     </LinearLayout>
 

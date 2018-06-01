@@ -57,16 +57,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         findViewById(R.id.sigupbtn).setOnClickListener(this);
         findViewById(R.id.login).setOnClickListener(this);
         findViewById(R.id.forgotPassword).setOnClickListener(this);
+        findViewById(R.id.skip).setOnClickListener(this);
 
-
-        /* Our old methode
-        loginbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),Home.class);
-                startActivity(intent);
-            }
-        });*/
 
 
     }
@@ -146,6 +138,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.forgotPassword :{
                 openDialog();
                 break;
+            }
+            case R.id.skip :{
+                startActivity(new Intent(this, Skip.class));
+                finish();
+            break;
             }
         }
     }

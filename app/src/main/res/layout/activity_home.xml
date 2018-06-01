@@ -13,6 +13,9 @@
         layout="@layout/app_bar_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
+
+
         />
 
     <android.support.design.widget.NavigationView
@@ -23,35 +26,42 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
+        android:theme="@style/actionbar"
         app:menu="@menu/activity_home_drawer" >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="bottom"
             android:clickable="true"
-            android:orientation="vertical"
+            android:id="@+id/logout"
+            android:weightSum="4"
+            android:orientation="horizontal"
             android:background="@color/White">
-            <TextView
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/logout">
 
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:background="@color/White"
-                android:id="@+id/logout"
+                android:layout_weight="3"
                 android:text="Logout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:drawableLeft="@drawable/logout"
-                android:textColor="#000" />
+                android:textSize="14.5sp"
+                android:gravity="center_vertical"
+                android:textColor="@color/greyTextHospital" />
         </LinearLayout>
 
 
-       <!-- <android.support.design.widget.NavigationView
-           android:background="@color/White"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_gravity="bottom"
-           app:menu="@menu/menu2">
 
-       </android.support.design.widget.NavigationView>-->
 
     </android.support.design.widget.NavigationView>
 

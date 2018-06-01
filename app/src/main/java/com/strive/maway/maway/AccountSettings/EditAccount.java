@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,6 @@ public class EditAccount extends Fragment {
     View mView;
     EditText emailFiled,name,passwordCheck,passwordfield,usernameField;
     Button btnSubmit;
-
-    private FirebaseAuth mAuth;
     private Firebase mRef;
 
 
@@ -54,7 +53,7 @@ public class EditAccount extends Fragment {
                 String check = passwordCheck.getText().toString();
                 if(!check.equals(password)){
 
-                    Toast.makeText(getActivity().getApplicationContext(),"Password Doesn't Match", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(),"Password doesn't match", Toast.LENGTH_SHORT).show();
                 }else{
 
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -70,41 +69,43 @@ public class EditAccount extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             //update Password
+
+                            //check if password is empty
+
+                            if(passwordfield.getText().toString().isEmpty()){
+                                passwordfield.setError("Password is required");
+                                passwordfield.requestFocus(); //request the focus to the password
+                                return; //it stops the execution
+                            }
+
+                            //check if password has a valid length
+
+                            if(passwordfield.getText().length()<6) {
+                                passwordfield.setError("Minimum length of password should be six");
+                                passwordfield.requestFocus(); //request the focus to the password
+                                return; //it stops the execution
+                            }
+
                             user.updatePassword(passwordfield.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(getContext(), "password Done ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "password updated ", Toast.LENGTH_SHORT).show();
 
 
                                     }else{
 
-                                        Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "password modification failed", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                             //update the email
-                            user.updateEmail(emailFiled.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
-                                        Toast.makeText(getContext(), "EmailDone", Toast.LENGTH_SHORT).show();
+                            changeEmail();
 
-
-
-                                    }else {
-
-                                        Toast.makeText(getContext(), "email Faild", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-                            });
                         }else {
 
-                            Toast.makeText(getContext(), "Auth faild", Toast.LENGTH_SHORT).show();
-
-
-                        }
+                            Toast.makeText(getContext(), "Auth failed", Toast.LENGTH_SHORT).show();
+                              }
                         updateUsername();
                     }
                 });}
@@ -123,8 +124,10 @@ public class EditAccount extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         Firebase.setAndroidContext(getActivity().getApplicationContext());
+
         mRef = new Firebase("https://maway-1520842395181.firebaseio.com/");
         mView =inflater.inflate(R.layout.fragment_edit_account, container, false);
         emailFiled = mView.findViewById(R.id.editEmail);
@@ -155,8 +158,6 @@ private void updateUsername(){
     Firebase mRef2= mRef.child("Users").child(mUid);
     mRef2.child("username").setValue(usernameField.getText().toString());
 
-
-
 }
 
     private void SetUsername(){
@@ -186,7 +187,6 @@ private void updateUsername(){
 
 
                 }
-                //name.setText("Welcome "+username);
 
             }
 
@@ -196,9 +196,60 @@ private void updateUsername(){
             }
         });
 
+    }
+    private void changeEmail(){
 
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(email, password);
+
+        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if(task.isSuccessful()){
+                    //check if email is not empty
+
+                    if (emailFiled.getText().toString().isEmpty()){
+                        emailFiled.setError("Email is required");
+                        emailFiled.requestFocus(); //request the focus to the email
+                        return; //it stops the execution
+                    }
+
+                    //check if email is valid
+
+                    if(!Patterns.EMAIL_ADDRESS.matcher(emailFiled.getText().toString()).matches()){
+                        emailFiled.setError("Please enter a valid email");
+                        emailFiled.requestFocus(); //request the focus to the email
+                        return; //it stops the execution
+                    }
+
+            user.updateEmail(emailFiled.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+
+                    Toast.makeText(getContext(), "email updated", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
+
+                    Toast.makeText(getContext(), "email modifications failed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });}
+
+        else {
+
+                    Toast.makeText(getContext(), "Auth failed", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
     }
 
 
-}
+

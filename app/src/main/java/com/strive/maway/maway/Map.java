@@ -188,7 +188,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
                 Object dataTransfer[] = new Object[6];
                 GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-                Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
+
                 mGoogleMap.clear();
                 String hospital = "hospital";
                 String url = getUrl(latitude, longitude, hospital);
@@ -199,7 +199,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                 dataTransfer[4]=longitude;
                 dataTransfer[5]="notype";
                 getNearbyPlacesData.execute(dataTransfer);
-                Toast.makeText(getContext(), "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please wait while searching", Toast.LENGTH_SHORT).show();
             }}
         });
         doctor.setOnClickListener(new View.OnClickListener() {
@@ -210,7 +210,6 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
 
                 }else{
 
-                    Toast.makeText(getContext(), "Doctor clicked", Toast.LENGTH_SHORT).show();
 
                 doctorText.setTextColor(getResources().getColor(R.color.White));
                 doctorpicture.setImageResource(R.drawable.doctor_white);
@@ -240,6 +239,7 @@ public class Map extends Fragment implements OnMapReadyCallback,GoogleApiClient.
                         dataTransfer[5]="Dermatologist";
                         listDoctorsType.setVisibility(View.GONE);
                         getNearbyPlacesData.execute(dataTransfer);
+                        Toast.makeText(getContext(), "Please wait while searching", Toast.LENGTH_SHORT).show();
 
                     }
                 });

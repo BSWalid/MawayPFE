@@ -42,7 +42,7 @@ public class addLocationAdminDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.admin_add_dialog,null); //3awed dir synchronize
-        builder.setView(view).setTitle("ADD LOCATION")
+        builder.setView(view)
                 .setNegativeButton("REFUSE", new DialogInterface.OnClickListener() {
                     //here u delete it from there
                     @Override
