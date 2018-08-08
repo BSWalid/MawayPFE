@@ -194,7 +194,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback,GoogleA
 
                     Object dataTransfer[] = new Object[6];
                     GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-                    Toast.makeText(getContext(), " Hospital clicked", Toast.LENGTH_SHORT).show();
                     mGoogleMap.clear();
                     String hospital = "hospital";
                     String url = getUrl(latitude, longitude, hospital);
@@ -204,8 +203,9 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback,GoogleA
                     dataTransfer[3]=latitude;
                     dataTransfer[4]=longitude;
                     dataTransfer[5]="notype";
+                    Toast.makeText(getContext(), "Please wait while searching", Toast.LENGTH_SHORT).show();
+
                     getNearbyPlacesData.execute(dataTransfer);
-                    Toast.makeText(getContext(), "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
                 }}
         });
         doctor.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +216,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback,GoogleA
 
                 }else{
 
-                    Toast.makeText(getContext(), "Doctor clicked", Toast.LENGTH_SHORT).show();
 
                     doctorText.setTextColor(getResources().getColor(R.color.White));
                     doctorpicture.setImageResource(R.drawable.doctor_white);
@@ -245,6 +244,8 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback,GoogleA
                             mGoogleMap.clear();
                             dataTransfer[5]="Dermatologist";
                             listDoctorsType.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), "Please wait while searching", Toast.LENGTH_SHORT).show();
+
                             getNearbyPlacesData.execute(dataTransfer);
 
                         }

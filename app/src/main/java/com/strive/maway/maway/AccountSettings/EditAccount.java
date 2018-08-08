@@ -90,7 +90,7 @@ public class EditAccount extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(getContext(), "password updated ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Modification successful ", Toast.LENGTH_SHORT).show();
 
 
                                     }else{
@@ -243,7 +243,7 @@ private void updateUsername(){
 
         else {
 
-                    Toast.makeText(getContext(), "Auth failed", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getContext(), "Auth failed", Toast.LENGTH_SHORT).show();
                 }
 
             }

@@ -64,12 +64,12 @@ public class DeleteAccount extends android.support.v4.app.Fragment{
 
                 emailInserted = emailField.getText().toString();
                 passwordInserted = passwordField.getText().toString();
-                if(!emailInserted.equals(email)|| ! passwordInserted.equals(password)){
+                if(!emailInserted.toLowerCase().equals(email.toLowerCase())|| ! passwordInserted.equals(password)){
 
-                    Toast.makeText(getContext(), "email can't be deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "account can't be deleted", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(getContext(), "email can be deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "account can be deleted", Toast.LENGTH_SHORT).show();
 
                     //delete account
 

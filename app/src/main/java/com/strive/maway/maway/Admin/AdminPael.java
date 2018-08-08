@@ -68,14 +68,11 @@ public class AdminPael extends AppCompatActivity {
 
 
         AddLocationRequests addLocationRequests = new AddLocationRequests();
-        Users users = new Users();
         DeleteLocationRequests deleteLocationRequests = new DeleteLocationRequests();
 
         addLocationRequests.setArguments(args);
-        users.setArguments(args);
         deleteLocationRequests.setArguments(args);
         adapter.addfragments(addLocationRequests,"Location Requests");
-        adapter.addfragments(users,"Users");
         adapter.addfragments(deleteLocationRequests,"Delete Requests");
         vp.setAdapter(adapter);
 
